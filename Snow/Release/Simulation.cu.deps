@@ -303,10 +303,10 @@ c:\program files\nvidia gpu computing toolkit\cuda\v8.0\include\host_defines.h
 c:\program files\nvidia gpu computing toolkit\cuda\v8.0\include\vector_functions.h
 c:\program files\nvidia gpu computing toolkit\cuda\v8.0\include\device_launch_parameters.h
 c:\program files\nvidia gpu computing toolkit\cuda\v8.0\include\vector_types.h
-d:\zhaojianwang\mpm\snow\snow\Common.h
+d:\zhaojianwang\mpm\soilsim\soilsim\snow\Common.h
 C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v8.0\include\cuda_runtime.h
 C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v8.0\include\device_launch_parameters.h
-d:\zhaojianwang\mpm\snow\snow\helper_math.h
+d:\zhaojianwang\mpm\soilsim\soilsim\snow\helper_math.h
 C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v8.0\include\cuda_runtime.h
 D:\zhaojianwang\MPM\Snow\Snow\include\GL/glew.h
 C:\Program Files (x86)\Windows Kits\8.1\Include\um\GL/glu.h
@@ -690,14 +690,14 @@ C:\Program Files (x86)\Windows Kits\8.1\Include\um\winsvc.h
 C:\Program Files (x86)\Windows Kits\8.1\Include\um\mcx.h
 C:\Program Files (x86)\Windows Kits\8.1\Include\um\imm.h
 C:\Program Files (x86)\Windows Kits\8.1\Include\um\ime_cmodes.h
-d:\zhaojianwang\mpm\snow\snow\Parameters.h
-d:\zhaojianwang\mpm\snow\snow\Particle.h
-d:\zhaojianwang\mpm\snow\snow\matrix.h
+d:\zhaojianwang\mpm\soilsim\soilsim\snow\Parameters.h
+d:\zhaojianwang\mpm\soilsim\soilsim\snow\Particle.h
+d:\zhaojianwang\mpm\soilsim\soilsim\snow\matrix.h
 C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v8.0\include\cuda_runtime.h
-d:\zhaojianwang\mpm\snow\snow\quaternion.h
+d:\zhaojianwang\mpm\soilsim\soilsim\snow\quaternion.h
 C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v8.0\include\cuda_runtime.h
-d:\zhaojianwang\mpm\snow\snow\Cell.h
-d:\zhaojianwang\mpm\snow\snow\decomposition.h
+d:\zhaojianwang\mpm\soilsim\soilsim\snow\Cell.h
+d:\zhaojianwang\mpm\soilsim\soilsim\snow\decomposition.h
 C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v8.0\include\cuda_runtime.h
-d:\zhaojianwang\mpm\snow\snow\svd3/svd3_cuda/svd3_cuda.h
+d:\zhaojianwang\mpm\soilsim\soilsim\snow\svd3/svd3_cuda/svd3_cuda.h
 C:\Program Files (x86)\Windows Kits\10\Include\10.0.10240.0\ucrt\math.h

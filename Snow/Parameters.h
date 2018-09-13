@@ -6,7 +6,7 @@
 struct solverParams {
 	float deltaT;
 	float radius;
-	
+
 	float compression;
 	float stretch;
 	float hardening;
@@ -14,10 +14,13 @@ struct solverParams {
 	float poisson;
 	float alpha;
 	float density;
-	
+
+
 	//lame parameters
 	float lambda;
 	float mu;
+
+	float h0, h1, h2, h3;
 
 	int numParticles;
 

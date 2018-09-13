@@ -15,14 +15,15 @@ public:
 		sp->compression = 0.25f;
 		sp->stretch = 0.010f;
 		sp->hardening = 10.0f;
-		sp->young = 1.4e5f;
-		sp->poisson = 0.2f;
+		sp->young = 3.5e5f;
+		sp->poisson = 0.3f;
 		sp->alpha = 0.95f;
-		sp->density = 400.0f;
+		sp->density = 2200.0f;
 
 		sp->lambda = getLambda(sp->poisson, sp->young);
 		sp->mu = getMu(sp->poisson, sp->young);
 
+		sp->h0 = 35; sp->h1 = 0; sp->h2 = 0.2; sp->h3 = 10;
 		sp->gravity = make_float3(0, -9.8f, 0);
 
 		sp->frictionCoeff = 1.0f;
@@ -53,7 +54,7 @@ public:
 		Scene::init(particles, sp);
 
 		const float restDistance = sp->radius * 1.f;
-		
+
 		int3 dims = make_int3(150);
 		int3 snowDims = make_int3(40);
 
@@ -85,7 +86,7 @@ public:
 		sp->boxCorner2 = make_float3((dims.x) * sp->radius, (dims.y) * sp->radius, (dims.z) * sp->radius);
 
 		int3 snowDims = make_int3(30);
-		createSnowball(particles, make_float3(1.25f, 1.0f, 1.25f), snowDims, restDistance, getMass(sp->radius, sp->density), make_float3(0, -10.0f, 0));
+		createSnowball(particles, make_float3(1.25f, 1.0f, 1.25f), snowDims, restDistance, getMass(sp->radius, sp->density), make_float3(0, 0.0f, 0));
 		//createSnowball(particles, make_float3(1.25f, 2.0f, 1.25f), snowDims, restDistance, getMass(sp->radius, sp->density), make_float3(0, 0.0f, 0));
 
 		sp->numParticles = int(particles.size());

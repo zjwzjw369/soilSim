@@ -46,7 +46,7 @@ int main() {
 		glfwTerminate();
 		exit(EXIT_FAILURE);
 	}
-	
+
 	glfwMakeContextCurrent(window);
 
 	//Set callbacks for keyboard and mouse
@@ -61,7 +61,7 @@ int main() {
 
 	//Create scenes
 	vector<Particle> particles;
-	
+
 	//GroundSmash scene("GroundSmash");
 	SnowballDrop scene("SnowballDrop");
 	//WallSmash scene("Wallsmash");
@@ -84,7 +84,7 @@ int main() {
 
 	//Tell ffmpeg to expect raw rgba 720p-60hz frames
 	//-i - tells it to read frames from stdin
-	string cmd = "output\\ffmpeg.exe -r " + std::to_string((1.0f/60.0f) / sp.deltaT) + " -f rawvideo -pix_fmt rgba -s 1280x720 -i - "
+	string cmd = "output\\ffmpeg.exe -r " + std::to_string((1.0f / 60.0f) / sp.deltaT) + " -f rawvideo -pix_fmt rgba -s 1280x720 -i - "
 		"-threads 0 -preset fast -y -pix_fmt yuv420p -crf 21 -vf vflip output\\snow.mp4";
 
 	//open pipe to ffmpeg's stdin in binary write mode
@@ -114,19 +114,19 @@ int main() {
 
 		//Step physics and render
 		mainUpdate(system, renderer, cam, sp);
-		
+
 		//Swap the buffers
 		glfwSwapBuffers(window);
-		
+
 		//Save video if turned on
-		if (startVideo == true)	{
+		if (startVideo == true) {
 			ffmpeg = _popen(cmd.c_str(), "wb");
 			startVideo = false;
 		}
 		if (!paused) {
 			if (frameCounter % (int)(1 / (sp.deltaT * 30 * 3)) == 0) {
 				cout << lastFrame << endl;
-				
+
 			}
 		}
 		if (video == true) {
@@ -134,7 +134,7 @@ int main() {
 			fwrite(buffer, sizeof(int)* width * height, 1, ffmpeg);
 		}
 
-		
+
 		//glfwSetCursorPos(window, lastX, lastY);
 	}
 
@@ -183,7 +183,8 @@ void handleInput(GLFWwindow* window, ParticleSystem &system, Camera &cam) {
 			spacePressed = false;
 			if (paused) {
 				cout << "Running Simulation..." << endl;
-			} else {
+			}
+			else {
 				cout << "Pausing Simulation..." << endl;
 			}
 			paused = !paused;
