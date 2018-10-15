@@ -188,6 +188,7 @@ __global__ void transferData(Particle* particles, Cell* cells) {
 	if (index >= sp.numParticles) return;
 
 	//Compute current volume and stress factor
+	//printf("%lf %lf %lf\n", calcStress(particles[index].fe, particles[index].fp)[0], calcStress(particles[index].fe, particles[index].fp)[4], calcStress(particles[index].fe, particles[index].fp)[8]);
 	mat3 volumeStress = -particles[index].volume * calcStress(particles[index].fe, particles[index].fp);
 	particles[index].D = mat3(0.0f);
 	float hInv = 1.0f / sp.radius;
@@ -409,13 +410,61 @@ __global__ void updatePositions(Particle* particles) {
 
 	particles[index].pos += sp.deltaT * particles[index].velocity;
 }
+
+__device__ mat3 MCC_project(mat3 S, float qc, float *dq) {
+	mat3 e = mat3(log(S[0]), 0.0f, 0.0f,
+		0.0f, log(S[4]), 0.0f,
+		0.0f, 0.0f, log(S[8]));//自然对数e=lnS,因为S为对角矩阵，可以仅对对角元素进行操作，减少计算量
+	float trE = (e[0] + e[4] + e[8]);
+
+	mat3 newE = e - trE / 3.0f * mat3(1.0f);//newE=e-tr(e)/3*I;
+	if ((abs(newE[0])<0.000001f&&abs(newE[4])<0.000001f&&abs(newE[8])<0.000001f) || trE > 0.0f) {//在屈服面之外
+		(*dq) = 0;
+		return mat3(1.0f);
+	}
+
+	float newE_F = sqrt(mat3::innerProduct(newE, newE));//newE的F范数
+
+
+	float c = 0.0f;
+	//printf("%lf\n", ((3 * sp.lambda + 2 * sp.mu) / 2.0f / sp.mu)*0.210128);
+	float dy = 3/2*newE_F*newE_F + ((3 * sp.lambda + 2 * sp.mu) / 2.0f / sp.mu)*((3.0f * sp.lambda + 2.0f * sp.mu) / 2.0f / sp.mu)*0.210128*0.210128  * trE/3*(3.0f * trE/3 +qc );//dy=||newE||F+(d*lambda+2*mu)/(2*mu)*tr(E)*a;
+
+
+	if (dy <= 0) {//在屈服面之内
+		(*dq) = 0;
+		return S;
+	}
+
+	mat3 H = e - dy*(newE / newE_F);
+	(*dq) = dy;
+	if (trE/3<qc/2) {
+		(*dq) = -dy;
+	}
+	return mat3(exp(H[0]), 0.0f, 0.0f,
+		0.0f, exp(H[4]), 0.0f,
+		0.0f, 0.0f, exp(H[8]));//因为H为对角矩阵，可以仅对对角元素进行操作，减少计算量
+}
+
+
 __device__ mat3 project(mat3 S, float a, float *dq) {
 	mat3 e = mat3(log(S[0]), 0.0f, 0.0f,
 		0.0f, log(S[4]), 0.0f,
 		0.0f, 0.0f, log(S[8]));//自然对数e=lnS,因为S为对角矩阵，可以仅对对角元素进行操作，减少计算量
 	float trE = (e[0] + e[4] + e[8]);
+
+	/*
+	float maxE = -0.3f;//cone max
+	if (e[0]<maxE||e[4]<maxE||e[8]<maxE) {
+		//printf("%lf  %lf  %lf\n", e[0], e[4], e[8]);
+
+		return mat3(clamp(S[0], maxE, 1000.0f), 0.0f, 0.0f,
+		0.0f, clamp(S[4], maxE, 1000.0f), 0.0f,
+		0.0f, 0.0f, clamp(S[8], maxE, 1000.0f));//因为H为对角矩阵，可以仅对对角元素进行操作，减少计算量
+	}
+	*/
 	mat3 newE = e - trE / 3.0f * mat3(1.0f);//newE=e-tr(e)/3*I;
-	if ((abs(newE[0])<0.000001f&&abs(newE[4])<0.000001f&&abs(newE[8])<0.000001f) || trE > 0.0f) {
+	if ((abs(newE[0])<0.000001f&&abs(newE[4])<0.000001f&&abs(newE[8])<0.000001f) || trE > 0.0f) {//在屈服面之外
 		(*dq) = 0;
 		return mat3(1.0f);
 	}
@@ -423,10 +472,14 @@ __device__ mat3 project(mat3 S, float a, float *dq) {
 
 	float newE_F = sqrt(mat3::innerProduct(newE, newE));//newE的F范数
 
-	float dy = newE_F + (3 * sp.lambda + 2 * sp.mu) / 2.0f / sp.mu*trE*a;//dy=||newE||F+(d*lambda+2*mu)/(2*mu)*tr(E)*a;
+	//float dy = newE_F + (3 * sp.lambda + 2 * sp.mu) / 2.0f / sp.mu*trE*a;//dy=||newE||F+(d*lambda+2*mu)/(2*mu)*tr(E)*a;
 																		 //  printf("%lf\n", newE_F);
 
-	if (dy <= 0) {
+	float c = 0.0f;
+	float dy = newE_F + (3 * sp.lambda + 2 * sp.mu) / 2.0f / sp.mu*trE*a- c;//dy=||newE||F+(d*lambda+2*mu)/(2*mu)*tr(E)*a;
+
+
+	if (dy <= 0) {//在屈服面之内
 		(*dq) = 0;
 		return S;
 	}
@@ -434,11 +487,31 @@ __device__ mat3 project(mat3 S, float a, float *dq) {
 
 	mat3 H = e - dy*(newE / newE_F);
 	(*dq) = dy;
-	return mat3(exp(H[0]), 0.0f, 0.0f,
-		0.0f, exp(H[4]), 0.0f,
-		0.0f, 0.0f, exp(H[8]));//因为H为对角矩阵，可以仅对对角元素进行操作，减少计算量
+	float maxV = 1000.01f;//cone max
+	return mat3(clamp(exp(H[0]),0.0f, maxV), 0.0f, 0.0f,
+		0.0f, clamp(exp(H[4]), 0.0f, maxV), 0.0f,
+		0.0f, 0.0f, clamp(exp(H[8]), 0.0f, maxV));//因为H为对角矩阵，可以仅对对角元素进行操作，减少计算量
 }
 
+__global__ void MCC_plasticity_hardening(Particle* particles) {
+	int index = threadIdx.x + (blockIdx.x * blockDim.x);
+	if (index >= sp.numParticles) return;
+	mat3 Fe = particles[index].fe;
+	mat3 U, S, V;
+	computeSVD(Fe, U, S, V);
+	float dq = 0.0f;
+	mat3 T = MCC_project(S, particles[index].qc, &dq);
+	particles[index].fe = U*T*mat3::transpose(V);
+	particles[index].fp = V*mat3::inverse(T)*S*mat3::transpose(V)*particles[index].fp;//后面的fp是new fp，这里可能存在问题
+	particles[index].q = particles[index].q + dq;
+	if (dq>0.1) {
+		printf("%lf", dq);
+	}
+	particles[index].qc = particles[index].qc*exp(dq);
+	//float fi_F = 20.0f;
+	//float fi_F = sp.h0 + (sp.h1*particles[index].q - sp.h3)*exp(-sp.h2*particles[index].q);
+	//particles[index].a = 0.81649658f*(2 * sinf(fi_F / 180.0f*3.1415926f)) / (3 - sinf(fi_F / 180.0f*3.1415926f));//particles[index].a=sqrt(2/3)*(2 * sinf(fi_F)) / (3 - sinf(fi_F));//前面的一串数字是根号2/3
+}
 __global__ void plasticity_hardening(Particle* particles) {
 	int index = threadIdx.x + (blockIdx.x * blockDim.x);
 	if (index >= sp.numParticles) return;
@@ -450,8 +523,8 @@ __global__ void plasticity_hardening(Particle* particles) {
 	particles[index].fe = U*T*mat3::transpose(V);
 	particles[index].fp = V*mat3::inverse(T)*S*mat3::transpose(V)*particles[index].fp;//后面的fp是new fp，这里可能存在问题
 	particles[index].q = particles[index].q + dq;
-	float fi_F = 80.0f;
-	//float fi_F = sp.h0 + (sp.h1*particles[index].q - sp.h3)*exp(-sp.h2*particles[index].q);
+	//float fi_F = 20.0f;
+	float fi_F = sp.h0 + (sp.h1*particles[index].q - sp.h3)*exp(-sp.h2*particles[index].q);
 	particles[index].a = 0.81649658f*(2 * sinf(fi_F / 180.0f*3.1415926f)) / (3 - sinf(fi_F / 180.0f*3.1415926f));//particles[index].a=sqrt(2/3)*(2 * sinf(fi_F)) / (3 - sinf(fi_F));//前面的一串数字是根号2/3
 }
 
@@ -495,7 +568,7 @@ void update(Particle* particles, Cell* cells, int gridSize) {
 
 	//Update particle positions (10)
 	updatePositions << <particleDims, blockSize >> >(particles);
-	plasticity_hardening << <particleDims, blockSize >> >(particles);
+	MCC_plasticity_hardening << <particleDims, blockSize >> >(particles);
 }
 
 __host__ void setParams(solverParams *params) {

@@ -113,7 +113,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <LibraryPath>D:\zhaojianwang\MPM\Snow\Snow\lib;$(LibraryPath)</LibraryPath>
+    <LibraryPath>D:\zhaojianwang\MPM\soilSim\soilSim\Snow\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
@@ -164,7 +164,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>D:\zhaojianwang\MPM\Snow\Snow\include;$(OpenGL)\devil\include;$(OpenGL)\GLEW\include;$(OpenGL)\GLM;$(OpenGL)\GLFW\include\;$(OpenGL)\Eigen;$(CPP_LIB_DIR)\Eigen;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\zhaojianwang\MPM\soilSim\soilSim\Snow\include;$(OpenGL)\devil\include;$(OpenGL)\GLEW\include;$(OpenGL)\GLM;$(OpenGL)\GLFW\include\;$(OpenGL)\Eigen;$(CPP_LIB_DIR)\Eigen;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>
       </AdditionalOptions>
     </ClCompile>

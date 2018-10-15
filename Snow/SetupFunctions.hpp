@@ -27,6 +27,7 @@ inline void createParticleGrid(std::vector<Particle>& particles, solverParams* s
 //Some method for creating a snowball
 inline void createSnowball(std::vector<Particle>& particles, float3 center, int3 dims, float radius, float mass, float3 velocity) {
 	float sphereRadius = radius * (float)dims.x / 2.0f;
+
 	for (int x = -dims.x/2; x <= dims.x/2; x++) {
 		for (int y = -dims.y/2; y <= dims.y/2; y++) {
 			for (int z = -dims.z/2; z <= dims.z/2; z++) {
@@ -38,7 +39,7 @@ inline void createSnowball(std::vector<Particle>& particles, float3 center, int3
 
 				float3 pos = center + make_float3(float(x), float(y), float(z)) * radius + jitter;
 				// see if pos is inside the sphere
-				if (length(pos - center) < sphereRadius) {
+				if (length( pos - center) < sphereRadius) {
 					particles.push_back(Particle(make_float3(pos.x, pos.y, pos.z), velocity, mass));
 				}
 			}

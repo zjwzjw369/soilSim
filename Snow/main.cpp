@@ -121,6 +121,8 @@ int main() {
 		//Save video if turned on
 		if (startVideo == true) {
 			ffmpeg = _popen(cmd.c_str(), "wb");
+
+			
 			startVideo = false;
 		}
 		if (!paused) {
