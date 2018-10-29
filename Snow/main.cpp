@@ -64,7 +64,9 @@ int main() {
 
 	//GroundSmash scene("GroundSmash");
 	//SnowballDrop scene("SnowballDrop");
-	CustomSceneLoad scene("E:\\zhaojianwang\\MPM\\soilSim\\soilSim\\Snow\\model\\ZJU.txt");
+	//CustomSceneLoad scene("H:\\Research\\mpm\\project\\Snow2\\soilSim-master\\Snow\\model\\ZJU.txt");
+
+	CustomSceneLoad scene(".\\model\\ZJU.txt");
 	//WallSmash scene("Wallsmash");
 	solverParams sp;
 
@@ -77,7 +79,7 @@ int main() {
 
 	ParticleSystem system = ParticleSystem(particles, sp);
 
-	renderer.initTerrain("E:\\zhaojianwang\\MPM\\soilSim\\soilSim\\Snow\\model\\terrain\\terrain1.raw", "E:\\zhaojianwang\\MPM\\soilSim\\soilSim\\Snow\\model\\terrain\\terrain1.jpg", 513);
+	renderer.initTerrain(".\\model\\terrain\\terrain1.raw", ".\\model\\terrain\\terrain1.jpg", 513);
 	//Initialize buffers for drawing snow
 	renderer.initSnowBuffers(sp.numParticles);
 	//Take 1 step for initialization
@@ -98,6 +100,33 @@ int main() {
 	//wglSwapIntervalEXT(1);//打开垂直同步，限制帧率
 	wglSwapIntervalEXT(0);//关闭垂直同步，充分发挥显卡的渲染能力
 
+
+	float minX = particles[0].pos.x, maxX = particles[0].pos.x, minY = particles[0].pos.y, maxY = particles[0].pos.y, minZ = particles[0].pos.z, maxZ = particles[0].pos.z;
+
+	for (int i = 0; i < particles.size(); ++i)
+	{
+		auto pos = particles[i].pos;
+		if (pos.x < minX)
+			minX = pos.x;
+		if (pos.x > maxX)
+			maxX = pos.x;
+		if (pos.y < minY)
+			minY = pos.y;
+		if (pos.y > maxY)
+			maxY = pos.y;
+		if (pos.z < minZ)
+			minZ = pos.z;
+		if (pos.z > maxZ)
+			maxZ = pos.z;
+	}
+	float XX = (minX + maxX) / 2;
+	float YY = (minY + maxY) / 2;
+	float ZZ = (minZ + maxZ) / 2;
+	//bool isfffff = true;
+	std::ofstream openfile("..\\VDBDatas\\vdbpoint.txt", std::ios::trunc);
+	int countFrame = 0;
+	int countT = 0;
+
 	while (!glfwWindowShouldClose(window)) {
 		//Set frame times
 		float currentFrame = float(glfwGetTime());
@@ -116,6 +145,27 @@ int main() {
 		//Step physics and render
 		mainUpdate(system, renderer, cam, sp);
 
+
+		if (countFrame++ == 800)
+		{
+			countFrame = 0;
+
+			for (int i = 0; i < particles.size(); ++i)
+			{
+				openfile << particles[i].pos.x * 5000 - XX * 5000 << " " << particles[i].pos.y * 5000 - YY * 5000 << " " << particles[i].pos.z * 5000 - ZZ * 5000 << endl;
+			}
+			openfile << 99999.9f << " " << 99999.9f << " " << 99999.9f << endl;
+			countT++;
+		}
+
+		if (countT == 3)
+		{
+			openfile.close();
+			cout << "out put vdbpoint.txt finish";
+		}
+
+
+
 		//Swap the buffers
 		glfwSwapBuffers(window);
 
@@ -123,7 +173,7 @@ int main() {
 		if (startVideo == true) {
 			ffmpeg = _popen(cmd.c_str(), "wb");
 
-			
+
 			startVideo = false;
 		}
 		if (!paused) {
