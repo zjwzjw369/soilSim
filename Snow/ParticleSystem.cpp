@@ -6,7 +6,7 @@ using namespace std;
 ParticleSystem::ParticleSystem(vector<Particle>& particles, solverParams& params) {
 
 	solverParams sp = params;
-
+	mainParticles = &particles[0];
 	cout << "Solver parameters:" << endl;
 	cout << "alpha: " << sp.alpha << endl;
 	cout << "boxCorner1: " << "(" << sp.boxCorner1.x << ", " << sp.boxCorner1.y << ", " << sp.boxCorner1.z << ")" << endl;
@@ -42,6 +42,8 @@ ParticleSystem::~ParticleSystem() {
 void ParticleSystem::updateWrapper(solverParams& params) {
 	setParams(&params);
 	update(particles, cells, params.gridSize);
+	cudaDeviceSynchronize();
+	cudaCheck(cudaMemcpy(&mainParticles[0], &particles[0], params.numParticles * sizeof(Particle), cudaMemcpyDeviceToHost));
 }
 
 void ParticleSystem::getPositionsWrapper(float* positionsPtr) {

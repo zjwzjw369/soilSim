@@ -26,6 +26,7 @@ static bool video = false;
 static bool startVideo = false;
 static bool paused = true;
 static bool spacePressed = false;
+bool isOutputVDBStart = false;//是否开始输出openvdb数据
 
 void handleInput(GLFWwindow* window, ParticleSystem &system, Camera &cam);
 void mainUpdate(ParticleSystem& system, Renderer& renderer, Camera& cam, solverParams& params);
@@ -126,6 +127,7 @@ int main() {
 	std::ofstream openfile("..\\VDBDatas\\vdbpoint.txt", std::ios::trunc);
 	int countFrame = 0;
 	int countT = 0;
+	
 
 	while (!glfwWindowShouldClose(window)) {
 		//Set frame times
@@ -145,27 +147,29 @@ int main() {
 		//Step physics and render
 		mainUpdate(system, renderer, cam, sp);
 
-
-		if (countFrame++ == 800)
+		if (isOutputVDBStart)
 		{
-			countFrame = 0;
-
-			for (int i = 0; i < particles.size(); ++i)
+			if (countFrame++ == 800)
 			{
-				openfile << particles[i].pos.x * 5000 - XX * 5000 << " " << particles[i].pos.y * 5000 - YY * 5000 << " " << particles[i].pos.z * 5000 - ZZ * 5000 << endl;
+				countFrame = 0;
+
+				cout << "output";
+
+				for (int i = 0; i < particles.size(); ++i)
+				{
+					openfile << particles[i].pos.x * 5000 - XX * 5000 << " " << particles[i].pos.y  * 5000 - YY * 5000 << " " << particles[i].pos.z * 5000 - ZZ * 5000 << endl;
+				}
+				openfile << 99999.9f << " " << 99999.9f << " " << 99999.9f << endl;
+				countT++;
 			}
-			openfile << 99999.9f << " " << 99999.9f << " " << 99999.9f << endl;
-			countT++;
+
+			if (countT == 3)
+			{
+				isOutputVDBStart = false;
+				openfile.close();
+				cout << "out put vdbpoint.txt finish";
+			}
 		}
-
-		if (countT == 3)
-		{
-			openfile.close();
-			cout << "out put vdbpoint.txt finish";
-		}
-
-
-
 		//Swap the buffers
 		glfwSwapBuffers(window);
 
@@ -227,6 +231,18 @@ void handleInput(GLFWwindow* window, ParticleSystem &system, Camera &cam) {
 		startVideo = true;
 		video = true;
 	}
+
+	if (glfwGetKey(window, GLFW_KEY_O) == GLFW_PRESS)
+	{
+		isOutputVDBStart = true;
+		cout << "start output openvdb.txt" << endl;
+	}
+	if (glfwGetKey(window, GLFW_KEY_P) == GLFW_PRESS)
+	{
+		isOutputVDBStart = false;
+		cout << "stop output openvdb.txt" << endl;
+	}
+		
 
 	if (glfwGetKey(window, GLFW_KEY_PERIOD) == GLFW_PRESS)
 		video = false;
