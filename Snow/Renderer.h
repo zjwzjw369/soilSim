@@ -29,6 +29,7 @@ public:
 	void setProjection(glm::mat4 &projection);
 	void initSnowBuffers(int numParticles);
 	void render(Camera& cam);
+	void initTerrain(std::string rawFilename, std::string texFilename, int TerrainSize);//filename为terrain.raw所在的路径、TerrainSize为raw的大小 如大小为512*512，输入512即可
 
 private:
 	solverParams* sp;

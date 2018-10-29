@@ -411,41 +411,58 @@ __global__ void updatePositions(Particle* particles) {
 	particles[index].pos += sp.deltaT * particles[index].velocity;
 }
 
-__device__ mat3 MCC_project(mat3 S, float qc, float *dq) {
+
+__device__ mat3 MCC_project(mat3 S, float qc, float *dq,Particle *particle) {
 	mat3 e = mat3(log(S[0]), 0.0f, 0.0f,
 		0.0f, log(S[4]), 0.0f,
 		0.0f, 0.0f, log(S[8]));//自然对数e=lnS,因为S为对角矩阵，可以仅对对角元素进行操作，减少计算量
 	float trE = (e[0] + e[4] + e[8]);
 
 	mat3 newE = e - trE / 3.0f * mat3(1.0f);//newE=e-tr(e)/3*I;
-	if ((abs(newE[0])<0.000001f&&abs(newE[4])<0.000001f&&abs(newE[8])<0.000001f) || trE > 0.0f) {//在屈服面之外
+	if ((abs(newE[0])<0.00000000001&&abs(newE[4])<0.00000000001&&abs(newE[8])<0.00000000001) || trE > 0.0f) {//在屈服面之外
 		(*dq) = 0;
+		particle->color = make_float3(0.8f, 0.3f, 0.3f);
 		return mat3(1.0f);
 	}
 
 	float newE_F = sqrt(mat3::innerProduct(newE, newE));//newE的F范数
 
 
-	float c = 0.0f;
-	//printf("%lf\n", ((3 * sp.lambda + 2 * sp.mu) / 2.0f / sp.mu)*0.210128);
-	float dy = 3/2*newE_F*newE_F + ((3 * sp.lambda + 2 * sp.mu) / 2.0f / sp.mu)*((3.0f * sp.lambda + 2.0f * sp.mu) / 2.0f / sp.mu)*0.210128*0.210128  * trE/3*(3.0f * trE/3 +qc );//dy=||newE||F+(d*lambda+2*mu)/(2*mu)*tr(E)*a;
-
-
-	if (dy <= 0) {//在屈服面之内
+	float p = trE*(3.0 * sp.lambda + 2.0 * sp.mu) / 3.0f / 2.0f / sp.mu / sqrt(1.5f);
+	float q = sqrt(1.5f)*newE_F * 2.0 * sp.mu / 2.0f / sp.mu;
+	float M = 0.210128f;
+	float dy = q*q + M*M*p*(p + qc / 2.0f / sp.mu / sqrt(1.5f));
+	//printf("%lf\n", ((3 * sp.lambda + 2 * sp.mu) / 2.0f / sp.mu)*0.210128);0.210128f
+	//float M = 1.2f;
+	//float dy = newE_F*newE_F + 2.0f/3.0f / 2.0f / sp.mu*((3.0f * sp.lambda + 2.0f * sp.mu) / 2.0f / sp.mu)*M*M  * trE/3.0f*((3.0f * sp.lambda + 2.0f * sp.mu)*trE/3.0f +qc );//dy=||newE||F+(d*lambda+2*mu)/(2*mu)*tr(E)*a;
+	//if(trE>-0.001f&&trE<0.0f)
+	//printf("%lf  trE\n", trE);
+	if (dy <= 0.00000000001) {//在屈服面之内
 		(*dq) = 0;
+		particle->color = make_float3(0.3f, 0.8f, 0.3f);
+		//printf("%lf  \n", dy);
 		return S;
 	}
-
-	mat3 H = e - dy*(newE / newE_F);
-	(*dq) = dy;
-	if (trE/3<qc/2) {
-		(*dq) = -dy;
+	mat3 H;
+	if (dy / (newE_F*newE_F)>1.0f) {
+		H = e - newE;
+		particle->color = make_float3(0.0f, 0.0f, 0.0f);
 	}
+	else {
+		H = e - (1.0f - sqrt(1.0f - dy / (newE_F*newE_F))) * newE;
+		particle->color = make_float3(0.3f, 0.3f, 0.8f);
+	}
+	(*dq) = dy;
+	if (trE / 3<qc / 2) {
+		//	(*dq) = -dy;
+	}
+	//if(dy>0.001)
+	//printf("%lf\n", trE*(3 * sp.lambda + 2 * sp.mu) / 3.0);
+
 	return mat3(exp(H[0]), 0.0f, 0.0f,
 		0.0f, exp(H[4]), 0.0f,
 		0.0f, 0.0f, exp(H[8]));//因为H为对角矩阵，可以仅对对角元素进行操作，减少计算量
 }
-
 
 __device__ mat3 project(mat3 S, float a, float *dq) {
 	mat3 e = mat3(log(S[0]), 0.0f, 0.0f,
@@ -500,13 +517,13 @@ __global__ void MCC_plasticity_hardening(Particle* particles) {
 	mat3 U, S, V;
 	computeSVD(Fe, U, S, V);
 	float dq = 0.0f;
-	mat3 T = MCC_project(S, particles[index].qc, &dq);
+	mat3 T = MCC_project(S, particles[index].qc, &dq, &particles[index]);
 	particles[index].fe = U*T*mat3::transpose(V);
 	particles[index].fp = V*mat3::inverse(T)*S*mat3::transpose(V)*particles[index].fp;//后面的fp是new fp，这里可能存在问题
 	particles[index].q = particles[index].q + dq;
-	if (dq>0.1) {
-		printf("%lf", dq);
-	}
+	
+	
+	
 	particles[index].qc = particles[index].qc*exp(dq);
 	//float fi_F = 20.0f;
 	//float fi_F = sp.h0 + (sp.h1*particles[index].q - sp.h3)*exp(-sp.h2*particles[index].q);
@@ -532,9 +549,12 @@ __global__ void getPos(float* positionsPtr, Particle* particles) {
 	int index = threadIdx.x + (blockIdx.x * blockDim.x);
 	if (index >= sp.numParticles) return;
 
-	positionsPtr[3 * index + 0] = particles[index].pos.x;
-	positionsPtr[3 * index + 1] = particles[index].pos.y;
-	positionsPtr[3 * index + 2] = particles[index].pos.z;
+	positionsPtr[6 * index + 0] = particles[index].pos.x;
+	positionsPtr[6 * index + 1] = particles[index].pos.y;
+	positionsPtr[6 * index + 2] = particles[index].pos.z;
+	positionsPtr[6 * index + 3] = particles[index].color.x;
+	positionsPtr[6 * index + 4] = particles[index].color.y;
+	positionsPtr[6 * index + 5] = particles[index].color.z;
 }
 
 void update(Particle* particles, Cell* cells, int gridSize) {

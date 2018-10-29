@@ -1,7 +1,7 @@
-#version 150 core
+#version 330 core
 
 in vec3 pos;
-
+in vec3 pColor;
 uniform mat4 mView;
 uniform mat4 projection;
 uniform float pointRadius;
@@ -22,6 +22,8 @@ void main() {
 		discard;
 	}
 	
-	fragColor = vec4(1);
+	//fragColor = vec4(1);
+	//fragColor =vec4(0.8667,0.6627,0.4,1);
 	fragColor =vec4(0.8667,0.6627,0.4,1);
+	fragColor=vec4(pColor,1.0f);
 }

@@ -63,7 +63,8 @@ int main() {
 	vector<Particle> particles;
 
 	//GroundSmash scene("GroundSmash");
-	SnowballDrop scene("SnowballDrop");
+	//SnowballDrop scene("SnowballDrop");
+	CustomSceneLoad scene("E:\\zhaojianwang\\MPM\\soilSim\\soilSim\\Snow\\model\\ZJU.txt");
 	//WallSmash scene("Wallsmash");
 	solverParams sp;
 
@@ -76,9 +77,9 @@ int main() {
 
 	ParticleSystem system = ParticleSystem(particles, sp);
 
+	renderer.initTerrain("E:\\zhaojianwang\\MPM\\soilSim\\soilSim\\Snow\\model\\terrain\\terrain1.raw", "E:\\zhaojianwang\\MPM\\soilSim\\soilSim\\Snow\\model\\terrain\\terrain1.jpg", 513);
 	//Initialize buffers for drawing snow
 	renderer.initSnowBuffers(sp.numParticles);
-
 	//Take 1 step for initialization
 	system.updateWrapper(sp);
 

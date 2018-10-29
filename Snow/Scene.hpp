@@ -5,7 +5,9 @@
 #include "Parameters.h"
 #include "SetupFunctions.hpp"
 #include "Particle.h"
-
+#include <iostream>
+#include <sstream>
+#include <fstream>
 class Scene {
 public:
 	Scene(std::string name) : name(name) {}
@@ -42,7 +44,6 @@ public:
 		return pow(radius, 3) * density / 4;
 	}
 
-private:
 	std::string name;
 };
 
@@ -87,6 +88,47 @@ public:
 
 		int3 snowDims = make_int3(30);
 		createSnowball(particles, make_float3(1.25f, 1.0f, 1.25f), snowDims, restDistance, getMass(sp->radius, sp->density), make_float3(0, 0.0f, 0));
+		//createSnowball(particles, make_float3(1.25f, 2.0f, 1.25f), snowDims, restDistance, getMass(sp->radius, sp->density), make_float3(0, 0.0f, 0));
+
+		sp->numParticles = int(particles.size());
+		sp->gBounds = dims;
+		sp->gridSize = dims.x * dims.y * dims.z;
+	}
+};
+
+class CustomSceneLoad : public Scene {//name for path
+public:
+	CustomSceneLoad(std::string name) : Scene(name){}
+	
+	virtual void init(std::vector<Particle>& particles, solverParams* sp) {
+		Scene::init(particles, sp);
+		const float restDistance = sp->radius * 1.0f;
+
+		int3 dims = make_int3(150);
+
+		sp->boxCorner1 = make_float3(0, 0.0f, 0);
+		sp->boxCorner2 = make_float3((dims.x) * sp->radius, (dims.y) * sp->radius, (dims.z) * sp->radius);
+		
+		std::ifstream file(name);
+		if (!file.is_open())
+		{
+			std::cout << "error open file";
+		}
+		float3 transform = make_float3(1.0);
+		float mass = getMass(sp->radius, sp->density);
+		float3 velocity = make_float3(0.0f, -5.0f, 0.0f);
+		while (!file.eof()) {
+			int vCount;
+			file >> vCount;
+			float x, y, z;
+			//std::cout << vCount << std::endl;
+			for (int i = 0; i < vCount;++i) {
+				file >> x >> y >> z;
+				particles.push_back(Particle(transform +make_float3(x, y-0.6, z), velocity, mass));
+			}
+		}
+		//int3 snowDims = make_int3(30);
+		//createSnowball(particles, make_float3(1.25f, 1.0f, 1.25f), snowDims, restDistance, getMass(sp->radius, sp->density), make_float3(0, 0.0f, 0));
 		//createSnowball(particles, make_float3(1.25f, 2.0f, 1.25f), snowDims, restDistance, getMass(sp->radius, sp->density), make_float3(0, 0.0f, 0));
 
 		sp->numParticles = int(particles.size());

@@ -1,9 +1,12 @@
 #include "Renderer.h"
-
+#include <vector>
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb_image.h"
 using namespace std;
 
 static const float radius = 0.008f;
-
+vector<float> terrainVertex;
+vector<float> terrainTex;
 Renderer::Renderer(int width, int height, solverParams* sp) :
 width(width),
 height(height),
@@ -88,7 +91,7 @@ void Renderer::initSnowBuffers(int numParticles) {
 
 	glGenBuffers(1, &snowBuffers.positions);
 	glBindBuffer(GL_ARRAY_BUFFER, snowBuffers.positions);
-	glBufferData(GL_ARRAY_BUFFER, numParticles * 3 * sizeof(float), 0, GL_DYNAMIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, numParticles * 6 * sizeof(float), 0, GL_DYNAMIC_DRAW);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 	cudaGraphicsGLRegisterBuffer(&resource, snowBuffers.positions, cudaGraphicsRegisterFlagsWriteDiscard);
@@ -126,7 +129,34 @@ void Renderer::renderPlane(planeBuffers &buf) {
 	glEnableVertexAttribArray(0);
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 }
+void Renderer::initTerrain(std::string rawFilename, ::string texFilename,int TerrainSize) {
+	std::ifstream file(rawFilename,ios::binary|ios::in);
+	if (!file.is_open())
+	{
+		cout << "open Terrain raw fail" << endl;
+		return;
+	}
+	terrainVertex.clear();
+	terrainTex.clear();
+	vector<vector<char>> buffer(TerrainSize, vector<char>(TerrainSize));
+	//vector<vector<int>>
+	char c;
+	file >> c;
+	cout <<"test:"<< (int)c<<endl;
+	for (int i = 0; i < TerrainSize-1;++i) {
+		for (int j = 0; j < TerrainSize - 1;++j) {
+			file >> c;
+			buffer[i][j] = c;
+		}
+	}
+	for (int i = 0; i < TerrainSize - 1; ++i) {
+		for (int j = 0; j < TerrainSize - 1; ++j) {
 
+			buffer[i][j] = c;
+		}
+	}
+
+}
 void Renderer::renderSnow(Camera& cam) {
 	glUseProgram(snow.program);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -142,7 +172,9 @@ void Renderer::renderSnow(Camera& cam) {
 	//Draw snow
 	glBindVertexArray(snowBuffers.vao);
 	glBindBuffer(GL_ARRAY_BUFFER, snowBuffers.positions);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
-	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), 0);
+	glEnableVertexAttribArray(0); 
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
+	glEnableVertexAttribArray(1);
 	glDrawArrays(GL_POINTS, 0, GLsizei(snowBuffers.numParticles));
 }

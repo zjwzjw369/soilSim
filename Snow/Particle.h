@@ -7,6 +7,7 @@
 struct Particle {
 	float3 pos;
 	float3 velocity;
+	float3 color;
 	float mass;
 	float volume;
 	mat3 fe;
@@ -21,7 +22,7 @@ struct Particle {
 
 	Particle(float3 pos, float3 velocity, float mass) :
 		pos(pos), velocity(velocity), mass(mass), volume(0),
-		fe(mat3(1.0f)), fp(mat3(1.0f)), B(mat3(0.0f)), D(mat3(0.0f)), a(0.0f),qc(1.5f)
+		fe(mat3(1.0f)), fp(mat3(1.0f)), B(mat3(0.0f)), D(mat3(0.0f)), a(0.0f),qc(200000.0f),color(make_float3(0.3f,0.8f,0.3f))
 	{}
 };
 
