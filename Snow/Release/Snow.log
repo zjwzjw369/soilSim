@@ -1,8 +1,4 @@
-﻿  ParticleSystem.cpp
-h:\research\mpm\project\snow3\soilsim\soilsim\snow\helper_math.h(1381): warning C4244: “参数”: 从“double”转换到“float”，可能丢失数据
-h:\research\mpm\project\snow3\soilsim\soilsim\snow\helper_math.h(1385): warning C4244: “参数”: 从“double”转换到“float”，可能丢失数据
-h:\research\mpm\project\snow3\soilsim\soilsim\snow\helper_math.h(1389): warning C4244: “参数”: 从“double”转换到“float”，可能丢失数据
-  main.cpp
+﻿  main.cpp
 h:\research\mpm\project\snow3\soilsim\soilsim\snow\helper_math.h(1381): warning C4244: “参数”: 从“double”转换到“float”，可能丢失数据
 h:\research\mpm\project\snow3\soilsim\soilsim\snow\helper_math.h(1385): warning C4244: “参数”: 从“double”转换到“float”，可能丢失数据
 h:\research\mpm\project\snow3\soilsim\soilsim\snow\helper_math.h(1389): warning C4244: “参数”: 从“double”转换到“float”，可能丢失数据
@@ -12,10 +8,22 @@ main.cpp(107): warning C4018: “<”: 有符号/无符号不匹配
 main.cpp(158): warning C4018: “<”: 有符号/无符号不匹配
 main.cpp(140): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
   C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\ucrt\stdio.h(1774): note: 参见“sprintf”的声明
+  ParticleSystem.cpp
+h:\research\mpm\project\snow3\soilsim\soilsim\snow\helper_math.h(1381): warning C4244: “参数”: 从“double”转换到“float”，可能丢失数据
+h:\research\mpm\project\snow3\soilsim\soilsim\snow\helper_math.h(1385): warning C4244: “参数”: 从“double”转换到“float”，可能丢失数据
+h:\research\mpm\project\snow3\soilsim\soilsim\snow\helper_math.h(1389): warning C4244: “参数”: 从“double”转换到“float”，可能丢失数据
+  Renderer.cpp
+h:\research\mpm\project\snow3\soilsim\soilsim\snow\helper_math.h(1381): warning C4244: “参数”: 从“double”转换到“float”，可能丢失数据
+h:\research\mpm\project\snow3\soilsim\soilsim\snow\helper_math.h(1385): warning C4244: “参数”: 从“double”转换到“float”，可能丢失数据
+h:\research\mpm\project\snow3\soilsim\soilsim\snow\helper_math.h(1389): warning C4244: “参数”: 从“double”转换到“float”，可能丢失数据
+  Shader.cpp
+h:\research\mpm\project\snow3\soilsim\soilsim\snow\helper_math.h(1381): warning C4244: “参数”: 从“double”转换到“float”，可能丢失数据
+h:\research\mpm\project\snow3\soilsim\soilsim\snow\helper_math.h(1385): warning C4244: “参数”: 从“double”转换到“float”，可能丢失数据
+h:\research\mpm\project\snow3\soilsim\soilsim\snow\helper_math.h(1389): warning C4244: “参数”: 从“double”转换到“float”，可能丢失数据
   正在生成代码
-  4 of 514 functions ( 0.8%) were compiled, the rest were copied from previous compilation.
+  14 of 514 functions ( 2.7%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
-    1 functions had inline decision re-evaluated but remain unchanged
+    0 functions had inline decision re-evaluated but remain unchanged
   已完成代码的生成
   Snow.vcxproj -> H:\Research\mpm\project\Snow3\soilSim\soilSim\Release\Snow.exe
   Snow.vcxproj -> H:\Research\mpm\project\Snow3\soilSim\soilSim\Release\Snow.pdb (Full PDB)
