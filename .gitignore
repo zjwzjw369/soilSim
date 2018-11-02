@@ -1,2 +1,5 @@
 *.db
 *.bgeo
+*.log
+*.pdb
+*.obj

@@ -333,7 +333,7 @@ C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v9.1\include\cuda_runtime.h
 C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v9.1\include\device_launch_parameters.h
 h:\research\mpm\project\snow3\soilsim\soilsim\snow\helper_math.h
 C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v9.1\include\cuda_runtime.h
-C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\include\GL/glew.h
+H:\Research\mpm\project\Snow3\soilSim\soilSim\Snow\\include\GL/glew.h
 C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\GL/glu.h
 C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\winapifamily.h
 C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\winpackagefamily.h
@@ -415,3 +415,321 @@ C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\include\xfacet
 C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\include\system_error
 C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\include\cerrno
 C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\ucrt\share.h
+H:\Research\mpm\project\Snow3\soilSim\soilSim\Snow\\include\glm/glm.hpp
+h:\research\mpm\project\snow3\soilsim\soilsim\snow\include\glm\detail/_fixes.hpp
+C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\include\cassert
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\ucrt\assert.h
+h:\research\mpm\project\snow3\soilsim\soilsim\snow\include\glm\fwd.hpp
+h:\research\mpm\project\snow3\soilsim\soilsim\snow\include\glm\detail/type_int.hpp
+h:\research\mpm\project\snow3\soilsim\soilsim\snow\include\glm\detail\setup.hpp
+C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\include\cassert
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\ucrt\assert.h
+C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v9.1\include\cuda.h
+h:\research\mpm\project\snow3\soilsim\soilsim\snow\include\glm\detail/type_float.hpp
+h:\research\mpm\project\snow3\soilsim\soilsim\snow\include\glm\detail/type_vec.hpp
+h:\research\mpm\project\snow3\soilsim\soilsim\snow\include\glm\detail\precision.hpp
+h:\research\mpm\project\snow3\soilsim\soilsim\snow\include\glm\detail/type_mat.hpp
+h:\research\mpm\project\snow3\soilsim\soilsim\snow\include\glm\vec2.hpp
+h:\research\mpm\project\snow3\soilsim\soilsim\snow\include\glm\detail/type_vec2.hpp
+h:\research\mpm\project\snow3\soilsim\soilsim\snow\include\glm\detail\type_vec2.inl
+h:\research\mpm\project\snow3\soilsim\soilsim\snow\include\glm\vec3.hpp
+h:\research\mpm\project\snow3\soilsim\soilsim\snow\include\glm\detail/type_vec3.hpp
+h:\research\mpm\project\snow3\soilsim\soilsim\snow\include\glm\detail\type_vec3.inl
+h:\research\mpm\project\snow3\soilsim\soilsim\snow\include\glm\vec4.hpp
+h:\research\mpm\project\snow3\soilsim\soilsim\snow\include\glm\detail/type_vec4.hpp
+h:\research\mpm\project\snow3\soilsim\soilsim\snow\include\glm\detail\type_vec4.inl
+h:\research\mpm\project\snow3\soilsim\soilsim\snow\include\glm\mat2x2.hpp
+h:\research\mpm\project\snow3\soilsim\soilsim\snow\include\glm\detail/type_mat2x2.hpp
+h:\research\mpm\project\snow3\soilsim\soilsim\snow\include\glm\detail\type_mat2x2.inl
+h:\research\mpm\project\snow3\soilsim\soilsim\snow\include\glm\mat2x3.hpp
+h:\research\mpm\project\snow3\soilsim\soilsim\snow\include\glm\detail/type_mat2x3.hpp
+h:\research\mpm\project\snow3\soilsim\soilsim\snow\include\glm\detail\type_mat2x3.inl
+h:\research\mpm\project\snow3\soilsim\soilsim\snow\include\glm\mat2x4.hpp
+h:\research\mpm\project\snow3\soilsim\soilsim\snow\include\glm\detail/type_mat2x4.hpp
+h:\research\mpm\project\snow3\soilsim\soilsim\snow\include\glm\detail\type_mat2x4.inl
+h:\research\mpm\project\snow3\soilsim\soilsim\snow\include\glm\mat3x2.hpp
+h:\research\mpm\project\snow3\soilsim\soilsim\snow\include\glm\detail/type_mat3x2.hpp
+h:\research\mpm\project\snow3\soilsim\soilsim\snow\include\glm\detail\type_mat3x2.inl
+h:\research\mpm\project\snow3\soilsim\soilsim\snow\include\glm\mat3x3.hpp
+h:\research\mpm\project\snow3\soilsim\soilsim\snow\include\glm\detail/type_mat3x3.hpp
+h:\research\mpm\project\snow3\soilsim\soilsim\snow\include\glm\detail\type_mat3x3.inl
+h:\research\mpm\project\snow3\soilsim\soilsim\snow\include\glm\mat3x4.hpp
+h:\research\mpm\project\snow3\soilsim\soilsim\snow\include\glm\detail/type_mat3x4.hpp
+h:\research\mpm\project\snow3\soilsim\soilsim\snow\include\glm\detail\type_mat3x4.inl
+h:\research\mpm\project\snow3\soilsim\soilsim\snow\include\glm\mat4x2.hpp
+h:\research\mpm\project\snow3\soilsim\soilsim\snow\include\glm\detail/type_mat4x2.hpp
+h:\research\mpm\project\snow3\soilsim\soilsim\snow\include\glm\detail\type_mat4x2.inl
+h:\research\mpm\project\snow3\soilsim\soilsim\snow\include\glm\mat4x3.hpp
+h:\research\mpm\project\snow3\soilsim\soilsim\snow\include\glm\detail/type_mat4x3.hpp
+h:\research\mpm\project\snow3\soilsim\soilsim\snow\include\glm\detail\type_mat4x3.inl
+h:\research\mpm\project\snow3\soilsim\soilsim\snow\include\glm\mat4x4.hpp
+h:\research\mpm\project\snow3\soilsim\soilsim\snow\include\glm\detail/type_mat4x4.hpp
+h:\research\mpm\project\snow3\soilsim\soilsim\snow\include\glm\detail\type_mat4x4.inl
+h:\research\mpm\project\snow3\soilsim\soilsim\snow\include\glm\trigonometric.hpp
+h:\research\mpm\project\snow3\soilsim\soilsim\snow\include\glm\detail/func_trigonometric.hpp
+h:\research\mpm\project\snow3\soilsim\soilsim\snow\include\glm\detail\func_trigonometric.inl
+h:\research\mpm\project\snow3\soilsim\soilsim\snow\include\glm\detail\_vectorize.hpp
+h:\research\mpm\project\snow3\soilsim\soilsim\snow\include\glm\detail\type_vec1.hpp
+h:\research\mpm\project\snow3\soilsim\soilsim\snow\include\glm\detail\type_vec1.inl
+h:\research\mpm\project\snow3\soilsim\soilsim\snow\include\glm\exponential.hpp
+h:\research\mpm\project\snow3\soilsim\soilsim\snow\include\glm\detail/func_exponential.hpp
+h:\research\mpm\project\snow3\soilsim\soilsim\snow\include\glm\detail\func_exponential.inl
+h:\research\mpm\project\snow3\soilsim\soilsim\snow\include\glm\detail\func_vector_relational.hpp
+h:\research\mpm\project\snow3\soilsim\soilsim\snow\include\glm\detail\func_vector_relational.inl
+C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\include\cassert
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\ucrt\assert.h
+h:\research\mpm\project\snow3\soilsim\soilsim\snow\include\glm\common.hpp
+h:\research\mpm\project\snow3\soilsim\soilsim\snow\include\glm\detail/func_common.hpp
+h:\research\mpm\project\snow3\soilsim\soilsim\snow\include\glm\detail\_fixes.hpp
+h:\research\mpm\project\snow3\soilsim\soilsim\snow\include\glm\detail\func_common.inl
+h:\research\mpm\project\snow3\soilsim\soilsim\snow\include\glm\packing.hpp
+h:\research\mpm\project\snow3\soilsim\soilsim\snow\include\glm\detail/func_packing.hpp
+h:\research\mpm\project\snow3\soilsim\soilsim\snow\include\glm\detail\func_packing.inl
+h:\research\mpm\project\snow3\soilsim\soilsim\snow\include\glm\detail\type_half.hpp
+h:\research\mpm\project\snow3\soilsim\soilsim\snow\include\glm\detail\type_half.inl
+h:\research\mpm\project\snow3\soilsim\soilsim\snow\include\glm\geometric.hpp
+h:\research\mpm\project\snow3\soilsim\soilsim\snow\include\glm\detail/func_geometric.hpp
+h:\research\mpm\project\snow3\soilsim\soilsim\snow\include\glm\detail\func_geometric.inl
+h:\research\mpm\project\snow3\soilsim\soilsim\snow\include\glm\matrix.hpp
+h:\research\mpm\project\snow3\soilsim\soilsim\snow\include\glm\detail/func_matrix.hpp
+h:\research\mpm\project\snow3\soilsim\soilsim\snow\include\glm\detail\func_matrix.inl
+h:\research\mpm\project\snow3\soilsim\soilsim\snow\include\glm\vector_relational.hpp
+h:\research\mpm\project\snow3\soilsim\soilsim\snow\include\glm\integer.hpp
+h:\research\mpm\project\snow3\soilsim\soilsim\snow\include\glm\detail/func_integer.hpp
+h:\research\mpm\project\snow3\soilsim\soilsim\snow\include\glm\detail\func_integer.inl
+H:\Research\mpm\project\Snow3\soilSim\soilSim\Snow\\include\glm/gtx/norm.hpp
+h:\research\mpm\project\snow3\soilsim\soilsim\snow\include\glm\gtx\../gtx/quaternion.hpp
+h:\research\mpm\project\snow3\soilsim\soilsim\snow\include\glm\gtx\../gtc/constants.hpp
+h:\research\mpm\project\snow3\soilsim\soilsim\snow\include\glm\gtc\constants.inl
+h:\research\mpm\project\snow3\soilsim\soilsim\snow\include\glm\gtx\../gtc/quaternion.hpp
+h:\research\mpm\project\snow3\soilsim\soilsim\snow\include\glm\gtc\quaternion.inl
+h:\research\mpm\project\snow3\soilsim\soilsim\snow\include\glm\gtx\quaternion.inl
+h:\research\mpm\project\snow3\soilsim\soilsim\snow\include\glm\gtx\norm.inl
+H:\Research\mpm\project\Snow3\soilSim\soilSim\Snow\\include\glm/gtc/matrix_transform.hpp
+h:\research\mpm\project\snow3\soilsim\soilsim\snow\include\glm\gtc\matrix_transform.inl
+H:\Research\mpm\project\Snow3\soilSim\soilSim\Snow\\include\glm/gtc/type_ptr.hpp
+h:\research\mpm\project\snow3\soilsim\soilsim\snow\include\glm\gtc\type_ptr.inl
+C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\include\vector
+C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\include\xmemory
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\ucrt\math.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\Windows.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\sdkddkver.h
+C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\include\excpt.h
+C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\include\vcruntime.h
+C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\include\stdarg.h
+C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\include\vcruntime.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\windef.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\minwindef.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\specstrings.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\specstrings_strict.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\specstrings_undef.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\driverspecs.h
+c:\program files (x86)\windows kits\10\include\10.0.17134.0\shared\sdv_driverspecs.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\winnt.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\kernelspecs.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\basetsd.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\guiddef.h
+c:\program files (x86)\windows kits\10\include\10.0.17134.0\shared\pshpack4.h
+c:\program files (x86)\windows kits\10\include\10.0.17134.0\shared\poppack.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\pshpack4.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\poppack.h
+c:\program files (x86)\windows kits\10\include\10.0.17134.0\shared\pshpack4.h
+c:\program files (x86)\windows kits\10\include\10.0.17134.0\shared\pshpack2.h
+c:\program files (x86)\windows kits\10\include\10.0.17134.0\shared\poppack.h
+c:\program files (x86)\windows kits\10\include\10.0.17134.0\shared\pshpack2.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\pshpack2.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\poppack.h
+c:\program files (x86)\windows kits\10\include\10.0.17134.0\shared\poppack.h
+c:\program files (x86)\windows kits\10\include\10.0.17134.0\shared\pshpack8.h
+c:\program files (x86)\windows kits\10\include\10.0.17134.0\shared\poppack.h
+c:\program files (x86)\windows kits\10\include\10.0.17134.0\shared\pshpack1.h
+c:\program files (x86)\windows kits\10\include\10.0.17134.0\shared\poppack.h
+c:\program files (x86)\windows kits\10\include\10.0.17134.0\shared\pshpack1.h
+c:\program files (x86)\windows kits\10\include\10.0.17134.0\shared\poppack.h
+c:\program files (x86)\windows kits\10\include\10.0.17134.0\shared\poppack.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\apiset.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\ktmtypes.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\winbase.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\apisetcconv.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\minwinbase.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\processenv.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\fileapi.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\debugapi.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\utilapiset.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\handleapi.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\errhandlingapi.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\fibersapi.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\namedpipeapi.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\profileapi.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\heapapi.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ioapiset.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\synchapi.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\interlockedapi.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\processthreadsapi.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\sysinfoapi.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\memoryapi.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\enclaveapi.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\threadpoollegacyapiset.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\threadpoolapiset.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\jobapi.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\jobapi2.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\wow64apiset.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\libloaderapi.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\securitybaseapi.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\namespaceapi.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\systemtopologyapi.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\processtopologyapi.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\securityappcontainer.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\realtimeapiset.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\winerror.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\timezoneapi.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\wingdi.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\pshpack1.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\poppack.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\pshpack2.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\poppack.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\pshpack2.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\poppack.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\pshpack4.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\poppack.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\pshpack4.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\poppack.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\winuser.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\pshpack2.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\poppack.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\tvout.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\winnls.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\datetimeapi.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\stringapiset.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\winnls.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\wincon.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\wincontypes.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\consoleapi.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\consoleapi2.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\consoleapi3.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\winver.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\verrsrc.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\winreg.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\reason.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\winnetwk.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\wnnc.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\cderr.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\dde.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ddeml.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\dlgs.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\lzexpand.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\mmsystem.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\mmsyscom.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\pshpack1.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\poppack.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\pshpack1.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\mciapi.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\mmsyscom.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\mmiscapi.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\mmsyscom.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\mmiscapi2.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\mmsyscom.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\playsoundapi.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\mmsyscom.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\mmeapi.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\mmsyscom.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\timeapi.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\mmsyscom.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\joystickapi.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\mmsyscom.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\poppack.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\nb30.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\rpc.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\pshpack8.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\rpcdce.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\rpcdcep.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\rpcnsi.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\rpcnterr.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\rpcasync.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\pshpack8.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\poppack.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\poppack.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\shellapi.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\winperf.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\pshpack8.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\poppack.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\winsock.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\inaddr.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\wincrypt.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\bcrypt.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ncrypt.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\dpapi.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\winefs.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\winscard.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\wtypes.h
+c:\program files (x86)\windows kits\10\include\10.0.17134.0\shared\rpcndr.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\pshpack8.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\rpcnsip.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\rpcsal.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\poppack.h
+c:\program files (x86)\windows kits\10\include\10.0.17134.0\shared\wtypesbase.h
+c:\program files (x86)\windows kits\10\include\10.0.17134.0\shared\guiddef.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\winioctl.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\pshpack1.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\poppack.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\pshpack1.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\poppack.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\pshpack1.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\poppack.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\pshpack1.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\poppack.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\pshpack1.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\poppack.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\pshpack1.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\poppack.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\pshpack1.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\poppack.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\winsmcrd.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\winspool.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\prsht.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\pshpack8.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\poppack.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ole2.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\pshpack8.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\objbase.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\pshpack8.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\combaseapi.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\pshpack8.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\unknwnbase.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\objidlbase.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\guiddef.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\cguid.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\poppack.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\coml2api.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\objidl.h
+c:\program files (x86)\windows kits\10\include\10.0.17134.0\um\unknwn.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\propidlbase.h
+c:\program files (x86)\windows kits\10\include\10.0.17134.0\um\oaidl.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\urlmon.h
+c:\program files (x86)\windows kits\10\include\10.0.17134.0\um\oleidl.h
+c:\program files (x86)\windows kits\10\include\10.0.17134.0\um\servprov.h
+c:\program files (x86)\windows kits\10\include\10.0.17134.0\um\msxml.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\propidl.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\poppack.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\oleauto.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\pshpack8.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\poppack.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\poppack.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\commdlg.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\prsht.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\shared\stralign.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\winsvc.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\mcx.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\imm.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\um\ime_cmodes.h
+h:\research\mpm\project\snow3\soilsim\soilsim\snow\Parameters.h
+h:\research\mpm\project\snow3\soilsim\soilsim\snow\Particle.h
+h:\research\mpm\project\snow3\soilsim\soilsim\snow\matrix.h
+C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v9.1\include\cuda_runtime.h
+h:\research\mpm\project\snow3\soilsim\soilsim\snow\quaternion.h
+C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v9.1\include\cuda_runtime.h
+h:\research\mpm\project\snow3\soilsim\soilsim\snow\Cell.h
+h:\research\mpm\project\snow3\soilsim\soilsim\snow\decomposition.h
+C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v9.1\include\cuda_runtime.h
+h:\research\mpm\project\snow3\soilsim\soilsim\snow\svd3/svd3_cuda/svd3_cuda.h
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\ucrt\math.h
