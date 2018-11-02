@@ -1,131 +1,16 @@
-﻿  Compiling CUDA source file svd3\svd3_cuda\svd3.cu...
-  Compiling CUDA source file Simulation.cu...
-  
-  H:\Research\mpm\project\Snow3\soilSim\soilSim\Snow>"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v9.1\bin\nvcc.exe" -gencode=arch=compute_30,code=\"sm_30,compute_30\" --use-local-env --cl-version 2015 -ccbin "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\x86_amd64" -x cu  -I\devil\include -I\GLEW\include -I\GLM -I\GLFW\include\ -I\Eigen -I\Eigen -IH:\Research\mpm\project\Snow3\soilSim\soilSim\Snow\\include -I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v9.1\include" -I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v9.1\include"     --keep-dir x64\Release -maxrregcount=0  --machine 64 --compile -cudart static     -DWIN32 -DNDEBUG -D_CONSOLE -D_LIB -D_MBCS -Xcompiler "/EHsc /W3 /nologo /O2 /FS /Zi  /MD " -o x64\Release\svd3.cu.obj "H:\Research\mpm\project\Snow3\soilSim\soilSim\Snow\svd3\svd3_cuda\svd3.cu" 
-  
-  H:\Research\mpm\project\Snow3\soilSim\soilSim\Snow>"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v9.1\bin\nvcc.exe" -gencode=arch=compute_30,code=\"sm_30,compute_30\" --use-local-env --cl-version 2015 -ccbin "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\x86_amd64" -x cu  -I\devil\include -I\GLEW\include -I\GLM -I\GLFW\include\ -I\Eigen -I\Eigen -IH:\Research\mpm\project\Snow3\soilSim\soilSim\Snow\\include -I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v9.1\include" -I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v9.1\include"     --keep-dir x64\Release -maxrregcount=0  --machine 64 --compile -cudart static     -DWIN32 -DNDEBUG -D_CONSOLE -D_LIB -D_MBCS -Xcompiler "/EHsc /W3 /nologo /O2 /FS /Zi  /MD " -o x64\Release\Simulation.cu.obj "H:\Research\mpm\project\Snow3\soilSim\soilSim\Snow\Simulation.cu" 
-c:\program files\nvidia gpu computing toolkit\cuda\v9.1\include\crt\math_functions.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
-c:\program files\nvidia gpu computing toolkit\cuda\v9.1\include\crt\math_functions.h(838): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
-c:\program files\nvidia gpu computing toolkit\cuda\v9.1\include\crt\math_functions.h(1772): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
-c:\program files\nvidia gpu computing toolkit\cuda\v9.1\include\crt\math_functions.h(2628): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
-c:\program files\nvidia gpu computing toolkit\cuda\v9.1\include\crt\math_functions.h(3477): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
-c:\program files\nvidia gpu computing toolkit\cuda\v9.1\include\crt\math_functions.h(4417): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
-c:\program files\nvidia gpu computing toolkit\cuda\v9.1\include\crt\math_functions.h(5319): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
-c:\program files\nvidia gpu computing toolkit\cuda\v9.1\include\crt\math_functions.h(6229): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
-c:\program files\nvidia gpu computing toolkit\cuda\v9.1\include\crt\math_functions.h(7104): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
-c:\program files\nvidia gpu computing toolkit\cuda\v9.1\include\crt\math_functions.h(7914): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
-c:\program files\nvidia gpu computing toolkit\cuda\v9.1\include\crt/device_functions.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
-c:\program files\nvidia gpu computing toolkit\cuda\v9.1\include\crt/device_functions.h(776): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
-c:\program files\nvidia gpu computing toolkit\cuda\v9.1\include\crt/device_functions.h(1636): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
-c:\program files\nvidia gpu computing toolkit\cuda\v9.1\include\crt\device_double_functions.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
-c:\program files\nvidia gpu computing toolkit\cuda\v9.1\include\sm_20_intrinsics.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
-c:\program files\nvidia gpu computing toolkit\cuda\v9.1\include\sm_20_intrinsics.h(925): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
-H:/Research/mpm/project/Snow3/soilSim/soilSim/Snow/svd3/svd3_cuda/svd3.cu(23): warning : variable "tid" was declared but never referenced
-c:\program files\nvidia gpu computing toolkit\cuda\v9.1\include\crt\math_functions.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
-c:\program files\nvidia gpu computing toolkit\cuda\v9.1\include\crt\math_functions.h(838): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
-c:\program files\nvidia gpu computing toolkit\cuda\v9.1\include\crt\math_functions.h(1772): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
-c:\program files\nvidia gpu computing toolkit\cuda\v9.1\include\crt\math_functions.h(2628): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
-c:\program files\nvidia gpu computing toolkit\cuda\v9.1\include\crt\math_functions.h(3477): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
-c:\program files\nvidia gpu computing toolkit\cuda\v9.1\include\crt\math_functions.h(4417): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
-c:\program files\nvidia gpu computing toolkit\cuda\v9.1\include\crt\math_functions.h(5319): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
-c:\program files\nvidia gpu computing toolkit\cuda\v9.1\include\crt\math_functions.h(6229): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
-c:\program files\nvidia gpu computing toolkit\cuda\v9.1\include\crt\math_functions.h(7104): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
-c:\program files\nvidia gpu computing toolkit\cuda\v9.1\include\crt\math_functions.h(7914): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
-c:\program files\nvidia gpu computing toolkit\cuda\v9.1\include\crt/device_functions.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
-c:\program files\nvidia gpu computing toolkit\cuda\v9.1\include\crt/device_functions.h(776): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
-c:\program files\nvidia gpu computing toolkit\cuda\v9.1\include\crt/device_functions.h(1636): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
-c:\program files\nvidia gpu computing toolkit\cuda\v9.1\include\crt\device_double_functions.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
-c:\program files\nvidia gpu computing toolkit\cuda\v9.1\include\sm_20_intrinsics.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
-c:\program files\nvidia gpu computing toolkit\cuda\v9.1\include\sm_20_intrinsics.h(925): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
-c:\program files\nvidia gpu computing toolkit\cuda\v9.1\include\crt\math_functions.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
-c:\program files\nvidia gpu computing toolkit\cuda\v9.1\include\crt\math_functions.h(838): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
-c:\program files\nvidia gpu computing toolkit\cuda\v9.1\include\crt\math_functions.h(1772): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
-c:\program files\nvidia gpu computing toolkit\cuda\v9.1\include\crt\math_functions.h(2628): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
-c:\program files\nvidia gpu computing toolkit\cuda\v9.1\include\crt\math_functions.h(3477): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
-c:\program files\nvidia gpu computing toolkit\cuda\v9.1\include\crt\math_functions.h(4417): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
-c:\program files\nvidia gpu computing toolkit\cuda\v9.1\include\crt\math_functions.h(5319): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
-c:\program files\nvidia gpu computing toolkit\cuda\v9.1\include\crt\math_functions.h(6229): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
-c:\program files\nvidia gpu computing toolkit\cuda\v9.1\include\crt\math_functions.h(7104): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
-c:\program files\nvidia gpu computing toolkit\cuda\v9.1\include\crt\math_functions.h(7914): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
-c:\program files\nvidia gpu computing toolkit\cuda\v9.1\include\crt/device_functions.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
-c:\program files\nvidia gpu computing toolkit\cuda\v9.1\include\crt/device_functions.h(776): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
-c:\program files\nvidia gpu computing toolkit\cuda\v9.1\include\crt/device_functions.h(1636): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
-c:\program files\nvidia gpu computing toolkit\cuda\v9.1\include\crt\device_double_functions.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
-c:\program files\nvidia gpu computing toolkit\cuda\v9.1\include\sm_20_intrinsics.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
-c:\program files\nvidia gpu computing toolkit\cuda\v9.1\include\sm_20_intrinsics.h(925): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
-H:/Research/mpm/project/Snow3/soilSim/soilSim/Snow/svd3/svd3_cuda/svd3.cu(23): warning : variable "tid" was declared but never referenced
-  svd3.cu
-h:\research\mpm\project\snow3\soilsim\soilsim\snow\svd3\svd3_cuda\svd3_cuda.h(133): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
-h:\research\mpm\project\snow3\soilsim\soilsim\snow\svd3\svd3_cuda\svd3_cuda.h(134): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
-h:\research\mpm\project\snow3\soilsim\soilsim\snow\svd3\svd3_cuda\svd3_cuda.h(254): warning C4305: “初始化”: 从“double”到“float”截断
-c:\program files\nvidia gpu computing toolkit\cuda\v9.1\include\crt\math_functions.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
-c:\program files\nvidia gpu computing toolkit\cuda\v9.1\include\crt\math_functions.h(838): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
-c:\program files\nvidia gpu computing toolkit\cuda\v9.1\include\crt\math_functions.h(1772): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
-c:\program files\nvidia gpu computing toolkit\cuda\v9.1\include\crt\math_functions.h(2628): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
-c:\program files\nvidia gpu computing toolkit\cuda\v9.1\include\crt\math_functions.h(3477): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
-c:\program files\nvidia gpu computing toolkit\cuda\v9.1\include\crt\math_functions.h(4417): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
-c:\program files\nvidia gpu computing toolkit\cuda\v9.1\include\crt\math_functions.h(5319): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
-c:\program files\nvidia gpu computing toolkit\cuda\v9.1\include\crt\math_functions.h(6229): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
-c:\program files\nvidia gpu computing toolkit\cuda\v9.1\include\crt\math_functions.h(7104): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
-c:\program files\nvidia gpu computing toolkit\cuda\v9.1\include\crt\math_functions.h(7914): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
-c:\program files\nvidia gpu computing toolkit\cuda\v9.1\include\crt\math_functions.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
-c:\program files\nvidia gpu computing toolkit\cuda\v9.1\include\crt\math_functions.h(838): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
-c:\program files\nvidia gpu computing toolkit\cuda\v9.1\include\crt\math_functions.h(1772): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
-c:\program files\nvidia gpu computing toolkit\cuda\v9.1\include\crt\math_functions.h(2628): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
-c:\program files\nvidia gpu computing toolkit\cuda\v9.1\include\crt\math_functions.h(3477): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
-c:\program files\nvidia gpu computing toolkit\cuda\v9.1\include\crt\math_functions.h(4417): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
-c:\program files\nvidia gpu computing toolkit\cuda\v9.1\include\crt\math_functions.h(5319): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
-c:\program files\nvidia gpu computing toolkit\cuda\v9.1\include\crt\math_functions.h(6229): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
-c:\program files\nvidia gpu computing toolkit\cuda\v9.1\include\crt\math_functions.h(7104): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
-c:\program files\nvidia gpu computing toolkit\cuda\v9.1\include\crt\math_functions.h(7914): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
-c:\program files\nvidia gpu computing toolkit\cuda\v9.1\include\crt/device_functions.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
-c:\program files\nvidia gpu computing toolkit\cuda\v9.1\include\crt/device_functions.h(776): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
-c:\program files\nvidia gpu computing toolkit\cuda\v9.1\include\crt/device_functions.h(1636): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
-c:\program files\nvidia gpu computing toolkit\cuda\v9.1\include\crt\device_double_functions.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
-c:\program files\nvidia gpu computing toolkit\cuda\v9.1\include\sm_20_intrinsics.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
-c:\program files\nvidia gpu computing toolkit\cuda\v9.1\include\sm_20_intrinsics.h(925): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
-  Simulation.cu
-h:\research\mpm\project\snow3\soilsim\soilsim\snow\svd3/svd3_cuda/svd3_cuda.h(133): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
-h:\research\mpm\project\snow3\soilsim\soilsim\snow\svd3/svd3_cuda/svd3_cuda.h(134): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
-h:\research\mpm\project\snow3\soilsim\soilsim\snow\svd3/svd3_cuda/svd3_cuda.h(254): warning C4305: “初始化”: 从“double”到“float”截断
-H:/Research/mpm/project/Snow3/soilSim/soilSim/Snow/Simulation.cu(562): warning C4477: “printf”: 格式字符串“%f”需要类型“double”的参数，但可变参数 1 拥有了类型“int”
-H:/Research/mpm/project/Snow3/soilSim/soilSim/Snow/Simulation.cu(562): warning C4477: “printf”: 格式字符串“%f”需要类型“double”的参数，但可变参数 4 拥有了类型“int”
-H:/Research/mpm/project/Snow3/soilSim/soilSim/Snow/Simulation.cu(597): warning C4477: “printf”: 格式字符串“%f”需要类型“double”的参数，但可变参数 1 拥有了类型“int”
-H:/Research/mpm/project/Snow3/soilSim/soilSim/Snow/Simulation.cu(597): warning C4477: “printf”: 格式字符串“%f”需要类型“double”的参数，但可变参数 4 拥有了类型“int”
-c:\program files\nvidia gpu computing toolkit\cuda\v9.1\include\crt\math_functions.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
-c:\program files\nvidia gpu computing toolkit\cuda\v9.1\include\crt\math_functions.h(838): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
-c:\program files\nvidia gpu computing toolkit\cuda\v9.1\include\crt\math_functions.h(1772): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
-c:\program files\nvidia gpu computing toolkit\cuda\v9.1\include\crt\math_functions.h(2628): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
-c:\program files\nvidia gpu computing toolkit\cuda\v9.1\include\crt\math_functions.h(3477): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
-c:\program files\nvidia gpu computing toolkit\cuda\v9.1\include\crt\math_functions.h(4417): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
-c:\program files\nvidia gpu computing toolkit\cuda\v9.1\include\crt\math_functions.h(5319): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
-c:\program files\nvidia gpu computing toolkit\cuda\v9.1\include\crt\math_functions.h(6229): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
-c:\program files\nvidia gpu computing toolkit\cuda\v9.1\include\crt\math_functions.h(7104): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
-c:\program files\nvidia gpu computing toolkit\cuda\v9.1\include\crt\math_functions.h(7914): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
-  main.cpp
+﻿  main.cpp
 h:\research\mpm\project\snow3\soilsim\soilsim\snow\helper_math.h(1381): warning C4244: “参数”: 从“double”转换到“float”，可能丢失数据
 h:\research\mpm\project\snow3\soilsim\soilsim\snow\helper_math.h(1385): warning C4244: “参数”: 从“double”转换到“float”，可能丢失数据
 h:\research\mpm\project\snow3\soilsim\soilsim\snow\helper_math.h(1389): warning C4244: “参数”: 从“double”转换到“float”，可能丢失数据
 h:\research\mpm\project\snow3\soilsim\soilsim\snow\Scene.hpp(28): warning C4305: “=”: 从“double”到“float”截断
 h:\research\mpm\project\snow3\soilsim\soilsim\snow\Scene.hpp(127): warning C4244: “参数”: 从“double”转换到“float”，可能丢失数据
-main.cpp(140): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+main.cpp(142): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
   C:\Program Files (x86)\Windows Kits\10\Include\10.0.17134.0\ucrt\stdio.h(1774): note: 参见“sprintf”的声明
-  ParticleSystem.cpp
-h:\research\mpm\project\snow3\soilsim\soilsim\snow\helper_math.h(1381): warning C4244: “参数”: 从“double”转换到“float”，可能丢失数据
-h:\research\mpm\project\snow3\soilsim\soilsim\snow\helper_math.h(1385): warning C4244: “参数”: 从“double”转换到“float”，可能丢失数据
-h:\research\mpm\project\snow3\soilsim\soilsim\snow\helper_math.h(1389): warning C4244: “参数”: 从“double”转换到“float”，可能丢失数据
-  Renderer.cpp
-h:\research\mpm\project\snow3\soilsim\soilsim\snow\helper_math.h(1381): warning C4244: “参数”: 从“double”转换到“float”，可能丢失数据
-h:\research\mpm\project\snow3\soilsim\soilsim\snow\helper_math.h(1385): warning C4244: “参数”: 从“double”转换到“float”，可能丢失数据
-h:\research\mpm\project\snow3\soilsim\soilsim\snow\helper_math.h(1389): warning C4244: “参数”: 从“double”转换到“float”，可能丢失数据
-  Shader.cpp
-h:\research\mpm\project\snow3\soilsim\soilsim\snow\helper_math.h(1381): warning C4244: “参数”: 从“double”转换到“float”，可能丢失数据
-h:\research\mpm\project\snow3\soilsim\soilsim\snow\helper_math.h(1385): warning C4244: “参数”: 从“double”转换到“float”，可能丢失数据
-h:\research\mpm\project\snow3\soilsim\soilsim\snow\helper_math.h(1389): warning C4244: “参数”: 从“double”转换到“float”，可能丢失数据
+main.cpp(301): warning C4244: “初始化”: 从“Partio::ParticleIndex”转换到“int”，可能丢失数据
   正在生成代码
-  9 of 509 functions ( 1.8%) were compiled, the rest were copied from previous compilation.
-    0 functions were new in current compilation
-    1 functions had inline decision re-evaluated but remain unchanged
+  32 of 523 functions ( 6.1%) were compiled, the rest were copied from previous compilation.
+    14 functions were new in current compilation
+    38 functions had inline decision re-evaluated but remain unchanged
   已完成代码的生成
   Snow.vcxproj -> H:\Research\mpm\project\Snow3\soilSim\soilSim\x64\Release\Snow.exe
   Snow.vcxproj -> H:\Research\mpm\project\Snow3\soilSim\soilSim\x64\Release\Snow.pdb (Full PDB)

@@ -7,6 +7,7 @@
 #include "Renderer.h"
 #include "Scene.hpp"
 #include <cuda_profiler_api.h>
+#include "partio\Partio.h"
 
 #define _CRTDBG_MAP_ALLOC
 #include <stdlib.h>
@@ -30,6 +31,7 @@ bool isOutputVDBStart = false;//是否开始输出openvdb数据
 
 void handleInput(GLFWwindow* window, ParticleSystem &system, Camera &cam);
 void mainUpdate(ParticleSystem& system, Renderer& renderer, Camera& cam, solverParams& params);
+void writePartio1(const std::string& filename, vector<Particle>& particles);
 
 int main() {
 	//Checks for memory leaks in debug mode
@@ -149,7 +151,7 @@ int main() {
 
 		if (isOutputVDBStart)
 		{
-			if (countFrame++ == 800)
+			if (countFrame++ == 40)
 			{
 				countFrame = 0;
 
@@ -161,9 +163,10 @@ int main() {
 				}
 				openfile << 99999.9f << " " << 99999.9f << " " << 99999.9f << endl;
 				countT++;
+				writePartio1("..\\VDBDatas\\" + std::to_string(countT) + ".bgeo", particles);
 			}
 
-			if (countT == 3)
+			if (countT == 20)
 			{
 				isOutputVDBStart = false;
 				openfile.close();
@@ -282,4 +285,41 @@ void mainUpdate(ParticleSystem& system, Renderer& renderer, Camera& cam, solverP
 
 	//Render
 	renderer.render(cam);
+}
+
+
+void writePartio1(const std::string& filename, vector<Particle>& particles)
+{
+	Partio::ParticlesDataMutable* parts = Partio::create();
+	Partio::ParticleAttribute posH = parts->addAttribute("position", Partio::VECTOR, 3);
+	Partio::ParticleAttribute velH = parts->addAttribute("velocity", Partio::VECTOR, 3);
+	Partio::ParticleAttribute indexH = parts->addAttribute("index", Partio::INT, 1);
+	Partio::ParticleAttribute typeH = parts->addAttribute("type", Partio::INT, 1);
+
+	for (unsigned int i = 0; i<particles.size(); ++i)
+	{
+		int idx = parts->addParticle();
+		float* p = parts->dataWrite<float>(posH, idx);
+		float* v = parts->dataWrite<float>(velH, idx);
+		int* index = parts->dataWrite<int>(indexH, idx);
+		int* type = parts->dataWrite<int>(typeH, idx);
+
+		p[0] = particles[i].pos.x;
+		p[1] = particles[i].pos.y;
+		p[2] = particles[i].pos.z;
+		v[0] = particles[i].velocity.x;
+		v[1] = particles[i].velocity.y;
+		v[2] = particles[i].velocity.z;
+
+		index[0] = i;
+		type[0] = 1;
+		/*int* index = parts->dataWrite<int>(indexH, idx);
+		int* type = parts->dataWrite<int>(typeH, idx);*/
+		/*for (int k = 0; k<3; k++) p[k] = h_pos[i][k];
+		for (int k = 0; k<3; k++) v[k] = h_vel[i][k];
+		index[0] = h_indices[i];
+		*/
+	}
+	Partio::write(filename.c_str(), *parts);
+	parts->release();
 }
