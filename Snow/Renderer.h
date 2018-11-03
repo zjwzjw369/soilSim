@@ -18,6 +18,12 @@ struct planeBuffers {
 	GLuint vbo;
 	GLuint ebo;
 };
+struct terrainBuffers {
+	GLuint vao;
+	GLuint vbo;
+	GLuint tId;
+	GLuint tbo;
+};
 
 class Renderer {
 public:
@@ -29,19 +35,23 @@ public:
 	void setProjection(glm::mat4 &projection);
 	void initSnowBuffers(int numParticles);
 	void render(Camera& cam);
-	void initTerrain(std::string rawFilename, std::string texFilename, int TerrainSize);//filename为terrain.raw所在的路径、TerrainSize为raw的大小 如大小为512*512，输入512即可
+	void initTerrain(std::string rawFilename, std::string texFilename);//filename为terrain.raw所在的路径、TerrainSize为raw的大小 如大小为512*512，输入512即可
+	void initTerrainBuffers();
 
 private:
 	solverParams* sp;
-	glm::mat4 mView, projection;
+	glm::mat4 mView, projection, terrainModel;
 	int width, height;
 	float aspectRatio;
 	Shader plane;
 	Shader snow;
+	Shader terrain;
 	snowBuffers snowBuffers;
 	planeBuffers wallBuffers;
 	planeBuffers floorBuffers;
+	terrainBuffers terBuffers;
 
+	void renderTerrain();
 	void renderPlane(planeBuffers &buf);
 	void renderSnow(Camera& cam);
 };

@@ -35,6 +35,9 @@
     <Filter Include="Physics\CudaMath">
       <UniqueIdentifier>{070d6968-1e40-4595-90b7-68007558bd5b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="shaders\terrain">
+      <UniqueIdentifier>{d39658cf-ef06-4077-bd99-6e9d953da876}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.hpp">
@@ -108,6 +111,12 @@
     </None>
     <None Include="Simulation.cuh">
       <Filter>Physics\ParticleSystem</Filter>
+    </None>
+    <None Include="terrain.vert">
+      <Filter>shaders\terrain</Filter>
+    </None>
+    <None Include="terrain.frag">
+      <Filter>shaders\terrain</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

@@ -12,7 +12,7 @@
 #define _CRTDBG_MAP_ALLOC
 #include <stdlib.h>
 #include <crtdbg.h>
-
+#include "Simulation.cuh"
 using namespace std;
 
 static const int width = 1280;
@@ -82,8 +82,11 @@ int main() {
 
 	ParticleSystem system = ParticleSystem(particles, sp);
 
-	renderer.initTerrain(".\\model\\terrain\\terrain1.raw", ".\\model\\terrain\\terrain1.jpg", 513);
+	renderer.initTerrain(".\\model\\terrain\\t1.bmp", ".\\model\\terrain\\t1Tex.bmp");
 	//Initialize buffers for drawing snow
+	renderer.initTerrainBuffers();
+	setTerrainTex(".\\model\\terrain\\t1.bmp", ".\\model\\terrain\\t1Normal.bmp");
+	
 	renderer.initSnowBuffers(sp.numParticles);
 	//Take 1 step for initialization
 	system.updateWrapper(sp);

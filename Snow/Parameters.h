@@ -32,7 +32,8 @@ struct solverParams {
 	float3 boxCorner2;
 	float frictionCoeff;
 	bool stickyWalls;
-
+	float3 terrainScale;
+	float3 terrainTransform;
 };
 
 #endif

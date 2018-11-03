@@ -34,6 +34,8 @@
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="SetupFunctions.hpp" />
     <ClInclude Include="Shader.h" />
+    <None Include="terrain.frag" />
+    <None Include="terrain.vert" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -60,7 +62,6 @@
     <ProjectGuid>{142E5D0E-0802-4996-827D-D7D5BBFEBEA7}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>Snow</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">

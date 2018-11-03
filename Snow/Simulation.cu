@@ -7,6 +7,7 @@
 #include "Cell.h"
 #include "matrix.h"
 #include "decomposition.h"
+#include "stb_image.h"
 
 #define cudaCheck(x) { cudaError_t err = x; if (err != cudaSuccess) { printf("Cuda error: %f in %s at %s:%f\n", err, #x, __FILE__, __LINE__); assert(0); } }
 
@@ -16,6 +17,8 @@ static dim3 particleDims;
 static dim3 gridDims;
 static const int blockSize = 128;
 bool firstTime = true;
+texture<uchar4, 2, cudaReadModeElementType> TerrainHeightTex;
+texture<uchar4, 2, cudaReadModeElementType> TerrainNormalTex;
 
 __constant__ solverParams sp;
 
@@ -106,6 +109,19 @@ __device__ void applyBoundaryCollisions(const float3& position, float3& velocity
 				normal.z = -1.0f;
 			}
 		}
+
+		//µØÐÎÅö×²
+		float terrainHeight = tex2D(TerrainHeightTex, position.z / sp.terrainScale.z, position.x / sp.terrainScale.x).x/255.0f;
+		if (position.y<terrainHeight*sp.terrainScale.y) {
+			collision = true;
+			uchar4 tmp= tex2D(TerrainNormalTex, position.z / sp.terrainScale.z, position.x / sp.terrainScale.x);
+			normal = make_float3(tmp.x/255.0f*2.0f-1.0f,tmp.z / 255.0f*2.0f - 1.0f,tmp.y / 255.0f*2.0f - 1.0f);
+			//normal = make_float3(0.0f);
+			//normal.y = 1.0f;
+		}
+		//if(terrainHeight>0.5)
+		//printf("%lf\n", terrainHeight);
+
 
 		if (collision) {
 			//if separating, do nothing
@@ -589,6 +605,77 @@ void update(Particle* particles, Cell* cells, int gridSize) {
 	//Update particle positions (10)
 	updatePositions << <particleDims, blockSize >> >(particles);
 	MCC_plasticity_hardening << <particleDims, blockSize >> >(particles);
+}
+
+__host__ void setTerrainTex(string terrainHeightPath,string terrainNormalpath) {
+	int width, height, nrChannels;
+	unsigned char *texData = stbi_load(terrainHeightPath.data(), &width, &height, &nrChannels, 0);
+	if (!texData) {
+		cout << "open Terrain Height Texture file fail" << endl;
+		return;
+	}
+	unsigned char *dst = (unsigned char *)malloc(width *height * 4);
+	for (int i = 0; i < height;++i) {
+		for (int j = 0; j < width;++j) {
+			dst[(i*width + j) * 4] = texData[(i*width + j) * 3];
+			dst[(i*width + j) * 4+1] = texData[(i*width + j) * 3+1];
+			dst[(i*width + j) * 4+2] = texData[(i*width + j) * 3+2];
+		}
+	}
+	unsigned int size = width * height * 4 * sizeof(unsigned char);
+	cudaChannelFormatDesc channelDesc =
+		cudaCreateChannelDesc(8, 8, 8, 8, cudaChannelFormatKindUnsigned);
+	cudaArray *cuArray;
+	cudaCheck(cudaMallocArray(&cuArray,
+		&channelDesc,
+		width,
+		height));
+
+	cudaCheck(cudaMemcpyToArray(cuArray,
+		0,
+		0,
+		dst,
+		size,
+		cudaMemcpyHostToDevice));
+	
+	TerrainHeightTex.addressMode[0] = cudaAddressModeWrap;
+	TerrainHeightTex.addressMode[1] = cudaAddressModeWrap;
+	//TerrainHeightTex.filterMode = cudaFilterModeLinear;
+	TerrainHeightTex.normalized = true;    // access with normalized texture coordinates
+	cudaCheck(cudaBindTextureToArray(TerrainHeightTex, cuArray, channelDesc));
+	unsigned char *tex2Data = stbi_load(terrainNormalpath.data(), &width, &height, &nrChannels, 0);
+	if(!tex2Data) {
+		cout << "open Terrain Normal Texture file fail" << endl;
+		return;
+	}
+	size = width * height * 4 * sizeof(unsigned char);
+	unsigned char *dst2 = (unsigned char *)malloc(width *height * 4);
+	for (int i = 0; i < height; ++i) {
+		for (int j = 0; j < width; ++j) {
+			dst2[(i*width + j) * 4] = tex2Data[(i*width + j) * 3];
+			dst2[(i*width + j) * 4 + 1] = tex2Data[(i*width + j) * 3 + 1];
+			dst2[(i*width + j) * 4 + 2] = tex2Data[(i*width + j) * 3 + 2];
+		}
+	}
+	cudaArray *cuArray2;
+	cudaCheck(cudaMallocArray(&cuArray2,
+		&channelDesc,
+		width,
+		height));
+	cudaCheck(cudaMemcpyToArray(cuArray2,
+		0,
+		0,
+		dst2,
+		size,
+		cudaMemcpyHostToDevice));
+	TerrainNormalTex.addressMode[0] = cudaAddressModeWrap;
+	TerrainNormalTex.addressMode[1] = cudaAddressModeWrap;
+	//TerrainNormalTex.filterMode = cudaFilterModeLinear;
+	TerrainNormalTex.normalized = true;    // access with normalized texture coordinates
+	cudaCheck(cudaBindTextureToArray(TerrainNormalTex, cuArray2, channelDesc));
+	
+	stbi_image_free(texData);
+	stbi_image_free(tex2Data);
 }
 
 __host__ void setParams(solverParams *params) {

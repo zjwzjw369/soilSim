@@ -124,7 +124,7 @@ public:
 			//std::cout << vCount << std::endl;
 			for (int i = 0; i < vCount;++i) {
 				file >> x >> y >> z;
-				particles.push_back(Particle(transform +make_float3(x, y-0.6, z), velocity, mass));
+				particles.push_back(Particle(transform +make_float3(x, y+0.5, z), velocity, mass));
 			}
 		}
 		//int3 snowDims = make_int3(30);
