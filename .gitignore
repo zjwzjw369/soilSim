@@ -3,3 +3,7 @@
 *.log
 *.pdb
 *.obj
+*.hip
+*.sc
+*.mp4
+*.fbx

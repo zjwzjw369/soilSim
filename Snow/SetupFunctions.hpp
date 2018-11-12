@@ -10,14 +10,14 @@ inline void createParticleGrid(std::vector<Particle>& particles, solverParams* s
 	//srand(int(time(NULL)));
 	srand(16);
 
-	for (int x = 0; x < dims.x; x++) {
-		for (int y = 0; y < dims.y; y++) {
-			for (int z = 0; z < dims.z; z++) {
+	for (int x = 0; x < dims.x*1.5; x++) {
+		for (int y = 0; y < dims.y*2.5; y++) {
+			for (int z = 0; z < dims.z*1.5; z++) {
 				float r1 = 0.001f + static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
 				float r2 = 0.001f + static_cast <float>(rand()) / static_cast <float> (RAND_MAX);
 				float r3 = 0.001f + static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
 				float3 jitter = make_float3(r1, r2, r3) * radius;
-				float3 pos = lower + make_float3(float(x), float(y), float(z)) * radius + jitter;
+				float3 pos = lower + make_float3(float(x), float(y), float(z)) * radius/2 + jitter;
 				particles.push_back(Particle(pos, velocity, mass));
 			}
 		}

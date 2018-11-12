@@ -36,6 +36,7 @@ public:
 	void initSnowBuffers(int numParticles);
 	void render(Camera& cam);
 	void initTerrain(std::string rawFilename, std::string texFilename);//filename为terrain.raw所在的路径、TerrainSize为raw的大小 如大小为512*512，输入512即可
+	void initTerrain16(std::string rFilename16, std::string texFilename);//16bit 高度图的版本
 	void initTerrainBuffers();
 
 private:

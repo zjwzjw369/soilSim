@@ -8,7 +8,6 @@
 #include "matrix.h"
 #include "decomposition.h"
 #include "stb_image.h"
-
 #define cudaCheck(x) { cudaError_t err = x; if (err != cudaSuccess) { printf("Cuda error: %f in %s at %s:%f\n", err, #x, __FILE__, __LINE__); assert(0); } }
 
 using namespace std;
@@ -17,8 +16,8 @@ static dim3 particleDims;
 static dim3 gridDims;
 static const int blockSize = 128;
 bool firstTime = true;
-texture<uchar4, 2, cudaReadModeElementType> TerrainHeightTex;
-texture<uchar4, 2, cudaReadModeElementType> TerrainNormalTex;
+texture<float4, 2, cudaReadModeElementType> TerrainHeightTex;
+texture<float4, 2, cudaReadModeElementType> TerrainNormalTex;
 
 __constant__ solverParams sp;
 
@@ -62,7 +61,7 @@ __device__ int getGridIndex(const int3 &pos) {
 	return (pos.z * sp.gBounds.y * sp.gBounds.x) + (pos.y * sp.gBounds.x) + pos.x;
 }
 
-__device__ void applyBoundaryCollisions(const float3& position, float3& velocity) {
+__device__ void applyBoundaryCollisions( float3& position, float3& velocity) {
 	float vn;
 	float3 vt;
 	float3 normal;
@@ -111,18 +110,19 @@ __device__ void applyBoundaryCollisions(const float3& position, float3& velocity
 		}
 
 		//地形碰撞
-		float terrainHeight = tex2D(TerrainHeightTex, position.z / sp.terrainScale.z, position.x / sp.terrainScale.x).x/255.0f;
+		float terrainHeight = tex2D(TerrainHeightTex, position.x / sp.terrainScale.x, position.z / sp.terrainScale.z).x;
 		if (position.y<terrainHeight*sp.terrainScale.y) {
 			collision = true;
-			uchar4 tmp= tex2D(TerrainNormalTex, position.z / sp.terrainScale.z, position.x / sp.terrainScale.x);
-			normal = make_float3(tmp.x/255.0f*2.0f-1.0f,tmp.z / 255.0f*2.0f - 1.0f,tmp.y / 255.0f*2.0f - 1.0f);
+			float4 tmp= tex2D(TerrainNormalTex, position.x / sp.terrainScale.x, position.z / sp.terrainScale.z);
+			normal = make_float3(tmp.x*2.0f - 1.0f, tmp.z*2.0f - 1.0f, tmp.y*2.0f - 1.0f);
+			position.y= terrainHeight*sp.terrainScale.y;
 			//normal = make_float3(0.0f);
 			//normal.y = 1.0f;
 		}
 		//if(terrainHeight>0.5)
 		//printf("%lf\n", terrainHeight);
 
-
+		
 		if (collision) {
 			//if separating, do nothing
 			vn = dot(velocity, normal);
@@ -206,7 +206,7 @@ __global__ void transferData(Particle* particles, Cell* cells) {
 	//Compute current volume and stress factor
 	//printf("%lf %lf %lf\n", calcStress(particles[index].fe, particles[index].fp)[0], calcStress(particles[index].fe, particles[index].fp)[4], calcStress(particles[index].fe, particles[index].fp)[8]);
 	mat3 volumeStress = -particles[index].volume * calcStress(particles[index].fe, particles[index].fp);
-	particles[index].D = mat3(0.0f);
+	//particles[index].D = mat3(0.0f);
 	float hInv = 1.0f / sp.radius;
 	int3 pos = make_int3(particles[index].pos * hInv);
 	for (int z = -2; z < 3; z++) {
@@ -218,7 +218,7 @@ __global__ void transferData(Particle* particles, Cell* cells) {
 					float3 diff = (particles[index].pos - (make_float3(n) * sp.radius)) * hInv;//APIC 中的 xp-xi
 					float wip = weight(fabs(diff));
 					mat3 xixp = mat3((make_float3(n) * sp.radius) - particles[index].pos, make_float3(0.0f), make_float3(0.0f));//APIC
-					particles[index].D += wip*xixp*mat3::transpose(xixp);//APIC
+				//	particles[index].D += wip*xixp*mat3::transpose(xixp);//APIC
 				}
 			}
 		}
@@ -235,7 +235,7 @@ __global__ void transferData(Particle* particles, Cell* cells) {
 					int gIndex = getGridIndex(n);
 					float wip = weight(fabs(diff));
 
-					float3 new_v = wip*particles[index].mass*(particles[index].velocity + particles[index].B*mat3::inverse(particles[index].D)*((make_float3(n) * sp.radius) - particles[index].pos));
+					//float3 new_v = wip*particles[index].mass*(particles[index].velocity + particles[index].B*mat3::inverse(particles[index].D)*((make_float3(n) * sp.radius) - particles[index].pos));
 					//atomicAdd(&(cells[gIndex].velocity.x), new_v.x);//APIC
 					//atomicAdd(&(cells[gIndex].velocity.y), new_v.y);//APIC
 					//atomicAdd(&(cells[gIndex].velocity.z), new_v.z);//APIC
@@ -341,6 +341,7 @@ __global__ void bodyCollisions(Cell* cells) {
 
 	float3 pos = make_float3(x, y, z) * sp.radius;
 	applyBoundaryCollisions(pos + sp.deltaT * cells[index].velocityStar, cells[index].velocityStar);
+	
 }
 
 __global__ void updateDeformationGradient(Particle* particles, Cell* cells) {
@@ -383,7 +384,7 @@ __global__ void updateParticleVelocities(Particle* particles, Cell* cells) {
 
 	float3 velocityPic = make_float3(0.0f);
 	float3 velocityFlip = particles[index].velocity;
-	particles[index].B = mat3(0.0f);
+	//particles[index].B = mat3(0.0f);
 	//Particles influenced by all cells within 2h of itself
 	for (int z = -2; z < 3; z++) {
 		for (int y = -2; y < 3; y++) {
@@ -398,7 +399,7 @@ __global__ void updateParticleVelocities(Particle* particles, Cell* cells) {
 					float w = weight(fabs(diff));
 
 					mat3 xixp = mat3((make_float3(n) * sp.radius) - particles[index].pos, make_float3(0.0f), make_float3(0.0f));//APIC
-					particles[index].B += w*mat3(cells[gIndex].velocityStar, make_float3(0.0f), make_float3(0.0f))*mat3::transpose(xixp);//APIC
+			//		particles[index].B += w*mat3(cells[gIndex].velocityStar, make_float3(0.0f), make_float3(0.0f))*mat3::transpose(xixp);//APIC
 
 					velocityPic += cells[gIndex].velocityStar * w;//also used for APIC
 					velocityFlip += (cells[gIndex].velocityStar - cells[gIndex].velocity) * w;
@@ -417,6 +418,7 @@ __global__ void particleBodyCollisions(Particle* particles) {
 	int index = threadIdx.x + (blockIdx.x * blockDim.x);
 	if (index >= sp.numParticles) return;
 	applyBoundaryCollisions(particles[index].pos + sp.deltaT * particles[index].velocity, particles[index].velocity);
+	
 }
 
 
@@ -425,6 +427,10 @@ __global__ void updatePositions(Particle* particles) {
 	if (index >= sp.numParticles) return;
 
 	particles[index].pos += sp.deltaT * particles[index].velocity;
+	float terrainHeight = tex2D(TerrainHeightTex, particles[index].pos.x / sp.terrainScale.x, particles[index].pos.z / sp.terrainScale.z).x;
+	if (particles[index].pos.y<terrainHeight*sp.terrainScale.y) {
+		particles[index].pos = particles[index].pos- sp.deltaT * particles[index].velocity;
+	}//防止穿透界面
 }
 
 
@@ -469,8 +475,8 @@ __device__ mat3 MCC_project(mat3 S, float qc, float *dq,Particle *particle) {
 		particle->color = make_float3(0.3f, 0.3f, 0.8f);
 	}
 	(*dq) = dy;
-	if (trE / 3<qc / 2) {
-		//	(*dq) = -dy;
+	if (trE / 3.0<qc / 2.0) {
+			(*dq) = -dy;
 	}
 	//if(dy>0.001)
 	//printf("%lf\n", trE*(3 * sp.lambda + 2 * sp.mu) / 3.0);
@@ -539,8 +545,7 @@ __global__ void MCC_plasticity_hardening(Particle* particles) {
 	particles[index].q = particles[index].q + dq;
 	
 	
-	
-	particles[index].qc = particles[index].qc*exp(dq);
+	particles[index].qc = particles[index].qc*exp(dq/0.1f);
 	//float fi_F = 20.0f;
 	//float fi_F = sp.h0 + (sp.h1*particles[index].q - sp.h3)*exp(-sp.h2*particles[index].q);
 	//particles[index].a = 0.81649658f*(2 * sinf(fi_F / 180.0f*3.1415926f)) / (3 - sinf(fi_F / 180.0f*3.1415926f));//particles[index].a=sqrt(2/3)*(2 * sinf(fi_F)) / (3 - sinf(fi_F));//前面的一串数字是根号2/3
@@ -576,7 +581,7 @@ __global__ void getPos(float* positionsPtr, Particle* particles) {
 void update(Particle* particles, Cell* cells, int gridSize) {
 	//Clear cell data
 	cudaCheck(cudaMemset(cells, 0, gridSize * sizeof(Cell)));
-
+	
 	//Rasterize particle data to grid (1)
 	if (!firstTime) transferData << <particleDims, blockSize >> >(particles, cells);
 
@@ -677,6 +682,80 @@ __host__ void setTerrainTex(string terrainHeightPath,string terrainNormalpath) {
 	stbi_image_free(texData);
 	stbi_image_free(tex2Data);
 }
+
+__host__ void setTerrainTex16(string terrainHeightPath16, string terrainNormalpath) {
+	int width, height, nrChannels;
+	stbi_us  *texData = stbi_load_16(terrainHeightPath16.data(), &width, &height, &nrChannels, 0);
+	if (!texData) {
+		cout << "open Terrain Height Texture file fail" << endl;
+		return;
+	}
+	float *dst = (float *)malloc(width *height * 4*sizeof(float));
+	//cout << "nrChannels " << nrChannels << endl;
+	for (int i = 0; i < height; ++i) {
+		for (int j = 0; j < width; ++j) {
+			dst[(i*width + j) * 4] = texData[(i*width + j) ]/65535.0;
+			dst[(i*width + j) * 4 + 1] = texData[(i*width + j) ] / 65535.0;
+			dst[(i*width + j) * 4 + 2] = texData[(i*width + j) ] / 65535.0;
+		}
+	}
+	unsigned int size = width * height * 4 * sizeof(float);
+	cudaChannelFormatDesc channelDesc =
+		cudaCreateChannelDesc(32, 32, 32, 32, cudaChannelFormatKindFloat);
+	cudaArray *cuArray;
+	cudaCheck(cudaMallocArray(&cuArray,
+		&channelDesc,
+		width,
+		height));
+
+	cudaCheck(cudaMemcpyToArray(cuArray,
+		0,
+		0,
+		dst,
+		size,
+		cudaMemcpyHostToDevice));
+
+	TerrainHeightTex.addressMode[0] = cudaAddressModeWrap;
+	TerrainHeightTex.addressMode[1] = cudaAddressModeWrap;
+	TerrainHeightTex.filterMode = cudaFilterModeLinear;
+	//cout << "TerrainHeightTex.filterMode" << TerrainHeightTex.filterMode << endl;
+	TerrainHeightTex.normalized = true;    // access with normalized texture coordinates
+	cudaCheck(cudaBindTextureToArray(TerrainHeightTex, cuArray, channelDesc));
+	unsigned char *tex2Data = stbi_load(terrainNormalpath.data(), &width, &height, &nrChannels, 0);
+	if (!tex2Data) {
+		cout << "open Terrain Normal Texture file fail" << endl;
+		return;
+	}
+	size = width * height * 4 * sizeof(float);
+	float *dst2 = (float *)malloc(width *height * 4 *sizeof(float));
+	for (int i = 0; i < height; ++i) {
+		for (int j = 0; j < width; ++j) {
+			dst2[(i*width + j) * 4] = tex2Data[(i*width + j) * 3]/255.0f;
+			dst2[(i*width + j) * 4 + 1] = tex2Data[(i*width + j) * 3 + 1]/255.0f;
+			dst2[(i*width + j) * 4 + 2] = tex2Data[(i*width + j) * 3 + 2]/255.0f;
+		}
+	}
+	cudaArray *cuArray2;
+	cudaCheck(cudaMallocArray(&cuArray2,
+		&channelDesc,
+		width,
+		height));
+	cudaCheck(cudaMemcpyToArray(cuArray2,
+		0,
+		0,
+		dst2,
+		size,
+		cudaMemcpyHostToDevice));
+	TerrainNormalTex.addressMode[0] = cudaAddressModeWrap;
+	TerrainNormalTex.addressMode[1] = cudaAddressModeWrap;
+	TerrainNormalTex.filterMode = cudaFilterModeLinear;
+	TerrainNormalTex.normalized = true;    // access with normalized texture coordinates
+	cudaCheck(cudaBindTextureToArray(TerrainNormalTex, cuArray2, channelDesc));
+
+	stbi_image_free(texData);
+	stbi_image_free(tex2Data);
+}
+
 
 __host__ void setParams(solverParams *params) {
 	particleDims = int(ceil(params->numParticles / blockSize + 0.5f));

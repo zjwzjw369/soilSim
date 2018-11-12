@@ -67,9 +67,8 @@ int main() {
 
 	//GroundSmash scene("GroundSmash");
 	//SnowballDrop scene("SnowballDrop");
-	//CustomSceneLoad scene("H:\\Research\\mpm\\project\\Snow2\\soilSim-master\\Snow\\model\\ZJU.txt");
-
-	CustomSceneLoad scene(".\\model\\ZJU.txt");
+	Landslide scene(".\\model\\terrain\\t3\\terrainBeforeH16.png", ".\\model\\terrain\\t3\\terrainAfterH16.png");
+	//CustomSceneLoad scene(".\\model\\ZJU.txt");
 	//WallSmash scene("Wallsmash");
 	solverParams sp;
 
@@ -82,11 +81,15 @@ int main() {
 
 	ParticleSystem system = ParticleSystem(particles, sp);
 
-	renderer.initTerrain(".\\model\\terrain\\t1.bmp", ".\\model\\terrain\\t1Tex.bmp");
-	//Initialize buffers for drawing snow
+	//init terrain
+	//renderer.initTerrain(".\\model\\terrain\\t1\\t1.bmp", ".\\model\\terrain\\t1\\t1Tex.bmp");
+	//地形纹理必须是2的n次方
+	//renderer.initTerrain(".\\model\\terrain\\t2\\terrainAfterH8.bmp", ".\\model\\terrain\\t2\\terrainTexAfter.bmp");
+	renderer.initTerrain16(".\\model\\terrain\\t3\\terrainAfterH16.png", ".\\model\\terrain\\t3\\terrainTexAfter.bmp");
 	renderer.initTerrainBuffers();
-	setTerrainTex(".\\model\\terrain\\t1.bmp", ".\\model\\terrain\\t1Normal.bmp");
-	
+	//setTerrainTex(".\\model\\terrain\\t3\\terrainAfterH8.bmp", ".\\model\\terrain\\t3\\terrainNormAfter.bmp");
+	setTerrainTex16(".\\model\\terrain\\t3\\terrainAfterH16.png", ".\\model\\terrain\\t3\\terrainNormAfter.bmp");
+	//Initialize buffers for drawing snow
 	renderer.initSnowBuffers(sp.numParticles);
 	//Take 1 step for initialization
 	system.updateWrapper(sp);
@@ -154,7 +157,7 @@ int main() {
 
 		if (isOutputVDBStart)
 		{
-			if (countFrame++ == 40)
+			if (countFrame++ == 80)
 			{
 				countFrame = 0;
 
@@ -169,7 +172,7 @@ int main() {
 				writePartio1("..\\VDBDatas\\" + std::to_string(countT) + ".bgeo", particles);
 			}
 
-			if (countT == 20)
+			if (countT == 500)
 			{
 				isOutputVDBStart = false;
 				openfile.close();

@@ -151,6 +151,7 @@ void Renderer::renderPlane(planeBuffers &buf) {
 
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 }
+
 void Renderer::initTerrain(std::string rawFilename, ::string texFilename) {
 	int width, height, nrChannels;
 	unsigned char *rawImg = stbi_load(rawFilename.data(), &width, &height, &nrChannels, 0);
@@ -161,17 +162,15 @@ void Renderer::initTerrain(std::string rawFilename, ::string texFilename) {
 	}
 	terrainVertex.clear();
 	terrainTex.clear();
-	sp->terrainScale = make_float3(2.55f, 2.0f, 2.55f);
-	sp->terrainTransform = make_float3(-1.0f, 0.0f, -1.0f);
 	terrainModel = glm::scale(terrainModel, glm::vec3(sp->terrainScale.x, sp->terrainScale.y, sp->terrainScale.z));
 
 	//terrainModel = glm::translate(terrainModel, glm::vec3(sp->terrainTransform.x, sp->terrainTransform.y, sp->terrainTransform.z));
 	for (int i = 0; i < height - 1; ++i) {
 		for (int j = 0; j < width - 1; ++j) {
-			float3 v1 = make_float3(j / (float)height, rawImg[j*width * 3 + i * 3] / (float)255, i / (float)width);
-			float3 v2 = make_float3(j / (float)height, rawImg[j*width * 3 + i * 3] / (float)255, (i + 1) / (float)width);
-			float3 v3 = make_float3((j + 1) / (float)height, rawImg[j*width * 3 + i * 3] / (float)255, (i + 1) / (float)width);
-			float3 v4 = make_float3((j + 1) / (float)height, rawImg[j*width * 3 + i * 3] / (float)255, i / (float)width);
+			float3 v1 = make_float3(i / (float)height, rawImg[j*width * 3 + i * 3] / (float)255, j / (float)width);
+			float3 v2 = make_float3(i / (float)height, rawImg[j*width * 3 + i * 3] / (float)255, (j + 1) / (float)width);
+			float3 v3 = make_float3((i + 1) / (float)height, rawImg[j*width * 3 + i * 3] / (float)255, (j + 1) / (float)width);
+			float3 v4 = make_float3((i + 1) / (float)height, rawImg[j*width * 3 + i * 3] / (float)255, j / (float)width);
 			terrainVertex.push_back(v1.x);
 			terrainVertex.push_back(v1.y);
 			terrainVertex.push_back(v1.z);
@@ -197,6 +196,67 @@ void Renderer::initTerrain(std::string rawFilename, ::string texFilename) {
 		terrainTex.push_back(tmp.x);
 		terrainTex.push_back(tmp.y);
 		//cout << tmp.x << "  " << tmp.y<<" "<< terrainVertex[i * 3 + 1] <<endl;
+	}
+
+	unsigned char *texData = stbi_load(texFilename.data(), &width, &height, &nrChannels, 0);
+	if (!texData) {
+		cout << "open Terrain Texture file fail" << endl;
+		return;
+	}
+	glGenTextures(1, &terBuffers.tId);
+	glBindTexture(GL_TEXTURE_2D, terBuffers.tId);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, texData);
+	glGenerateMipmap(GL_TEXTURE_2D);
+
+	stbi_image_free(rawImg);
+	stbi_image_free(texData);
+}
+
+void Renderer::initTerrain16(std::string rFilename16, ::string texFilename) {
+	int width, height, nrChannels;
+	stbi_us *rawImg = stbi_load_16(rFilename16.data(), &width, &height, &nrChannels, 0);
+	if (!rawImg)
+	{
+		cout << "open 16bit Terrain HeightMap file fail" << endl;
+		return;
+	}
+	terrainVertex.clear();
+	terrainTex.clear();
+	terrainModel = glm::scale(terrainModel, glm::vec3(sp->terrainScale.x, sp->terrainScale.y, sp->terrainScale.z));
+	for (int i = 0; i < height - 1; ++i) {
+		for (int j = 0; j < width - 1; ++j) {
+			float3 v1 = make_float3(i / (float)height, rawImg[j*width * nrChannels + i * nrChannels] / (float)65535, j / (float)width);
+			float3 v2 = make_float3(i / (float)height, rawImg[j*width * nrChannels + i * nrChannels] / (float)65535, (j + 1) / (float)width);
+			float3 v3 = make_float3((i + 1) / (float)height, rawImg[j*width * nrChannels + i * nrChannels] / (float)65535, (j + 1) / (float)width);
+			float3 v4 = make_float3((i + 1) / (float)height, rawImg[j*width * nrChannels + i * nrChannels] / (float)65535, j / (float)width);
+			terrainVertex.push_back(v1.x);
+			terrainVertex.push_back(v1.y);
+			terrainVertex.push_back(v1.z);
+			terrainVertex.push_back(v2.x);
+			terrainVertex.push_back(v2.y);
+			terrainVertex.push_back(v2.z);
+			terrainVertex.push_back(v3.x);
+			terrainVertex.push_back(v3.y);
+			terrainVertex.push_back(v3.z);
+			terrainVertex.push_back(v1.x);
+			terrainVertex.push_back(v1.y);
+			terrainVertex.push_back(v1.z);
+			terrainVertex.push_back(v3.x);
+			terrainVertex.push_back(v3.y);
+			terrainVertex.push_back(v3.z);
+			terrainVertex.push_back(v4.x);
+			terrainVertex.push_back(v4.y);
+			terrainVertex.push_back(v4.z);
+		}
+	}
+	for (int i = 0; i < terrainVertex.size() / 3; i++) {
+		float2 tmp = make_float2(terrainVertex[i * 3], terrainVertex[i * 3 + 2]);
+		terrainTex.push_back(tmp.x);
+		terrainTex.push_back(tmp.y);
 	}
 
 	unsigned char *texData = stbi_load(texFilename.data(), &width, &height, &nrChannels, 0);
