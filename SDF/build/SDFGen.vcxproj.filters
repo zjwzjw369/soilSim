@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="H:\Research\mpm\project\LevelSetTest\sdfgenbuild\SDFGen-master\main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="H:\Research\mpm\project\LevelSetTest\sdfgenbuild\SDFGen-master\makelevelset3.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="H:\Research\mpm\project\LevelSetTest\sdfgenbuild\SDFGen-master\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{647B56DC-1AB3-33AC-A393-92441FA11DA4}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
