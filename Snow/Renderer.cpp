@@ -12,7 +12,8 @@ Renderer::Renderer(int width, int height, solverParams* sp) :
 	height(height),
 	plane(Shader("plane.vert", "plane.frag")),
 	snow(Shader("snow.vert", "snow.frag")),
-	terrain(Shader("terrain.vert", "terrain.frag"))
+	terrain(Shader("terrain.vert", "terrain.frag")),
+	sphere(Shader("sphere.vert", "sphere.frag"))
 {
 	this->sp = sp;
 	aspectRatio = float(width) / float(height);
@@ -100,6 +101,12 @@ void Renderer::initTerrainBuffers() {
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	cout << terrainVertex.size() << endl;
 	cout << terrainTex.size() << endl;
+}
+
+void Renderer::initSphereBuffers() {
+
+	glGenVertexArrays(1, &sphBuffers.vao);
+	glGenBuffers(1, &sphBuffers.vbo);
 
 }
 
@@ -111,7 +118,7 @@ void Renderer::initSnowBuffers(int numParticles) {
 	glBufferData(GL_ARRAY_BUFFER, numParticles * 6 * sizeof(float), 0, GL_DYNAMIC_DRAW);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-	
+
 	cudaGraphicsGLRegisterBuffer(&resource, snowBuffers.positions, cudaGraphicsRegisterFlagsWriteDiscard);
 
 	snowBuffers.numParticles = numParticles;
@@ -132,7 +139,8 @@ void Renderer::render(Camera& cam) {
 	//Snow
 	renderSnow(cam);
 	renderTerrain();
-
+	//Sphere
+	renderSphere(cam);
 }
 
 void Renderer::renderPlane(planeBuffers &buf) {
@@ -310,7 +318,7 @@ void Renderer::renderSnow(Camera& cam) {
 
 	glEnable(GL_VERTEX_PROGRAM_POINT_SIZE);
 	//glEnable(GL_CULL_FACE);
-	glEnable(GL_DEPTH_TEST);
+	//glEnable(GL_DEPTH_TEST);
 
 	//Draw snow
 	glBindVertexArray(snowBuffers.vao);
@@ -321,4 +329,24 @@ void Renderer::renderSnow(Camera& cam) {
 	glEnableVertexAttribArray(1);
 
 	glDrawArrays(GL_POINTS, 0, GLsizei(snowBuffers.numParticles));
+}
+void Renderer::renderSphere(Camera& cam) {
+	glUseProgram(sphere.program);
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+	snow.setUniformmat4("mView", mView);
+	snow.setUniformmat4("projection", projection);
+	snow.setUniformf("pointRadius", sp->rig->r * 2);
+	snow.setUniformf("pointScale", width / aspectRatio * (1.0f / tanf(cam.zoom * 0.5f)));
+
+	glEnable(GL_VERTEX_PROGRAM_POINT_SIZE);
+
+	//Draw snow
+	glBindVertexArray(sphBuffers.vao);
+	glBindBuffer(GL_ARRAY_BUFFER, sphBuffers.vbo);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float3), &sp->rig->center, GL_DYNAMIC_DRAW);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
+	glEnableVertexAttribArray(0);
+
+	glDrawArrays(GL_POINTS, 0, 1);
 }

@@ -34,6 +34,8 @@
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="SetupFunctions.hpp" />
     <ClInclude Include="Shader.h" />
+    <None Include="sphere.frag" />
+    <None Include="sphere.vert" />
     <None Include="terrain.frag" />
     <None Include="terrain.vert" />
   </ItemGroup>

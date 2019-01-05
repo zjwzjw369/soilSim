@@ -25,6 +25,11 @@ struct terrainBuffers {
 	GLuint tbo;
 };
 
+struct sphereBuffers {
+	GLuint vao;
+	GLuint vbo;
+};
+
 class Renderer {
 public:
 	cudaGraphicsResource *resource;
@@ -38,7 +43,7 @@ public:
 	void initTerrain(std::string rawFilename, std::string texFilename);//filename为terrain.raw所在的路径、TerrainSize为raw的大小 如大小为512*512，输入512即可
 	void initTerrain16(std::string rFilename16, std::string texFilename);//16bit 高度图的版本
 	void initTerrainBuffers();
-
+	void initSphereBuffers();
 private:
 	solverParams* sp;
 	glm::mat4 mView, projection, terrainModel;
@@ -47,14 +52,17 @@ private:
 	Shader plane;
 	Shader snow;
 	Shader terrain;
+	Shader sphere;
 	snowBuffers snowBuffers;
 	planeBuffers wallBuffers;
 	planeBuffers floorBuffers;
 	terrainBuffers terBuffers;
+	sphereBuffers sphBuffers;
 
 	void renderTerrain();
 	void renderPlane(planeBuffers &buf);
 	void renderSnow(Camera& cam);
+	void renderSphere(Camera& cam);
 };
 
 #endif

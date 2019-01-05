@@ -38,6 +38,9 @@
     <Filter Include="shaders\terrain">
       <UniqueIdentifier>{d39658cf-ef06-4077-bd99-6e9d953da876}</UniqueIdentifier>
     </Filter>
+    <Filter Include="shaders\sphere">
+      <UniqueIdentifier>{88c494c1-9439-4378-ba1a-8e900d1882c2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.hpp">
@@ -117,6 +120,12 @@
     </None>
     <None Include="terrain.frag">
       <Filter>shaders\terrain</Filter>
+    </None>
+    <None Include="sphere.frag">
+      <Filter>shaders\sphere</Filter>
+    </None>
+    <None Include="sphere.vert">
+      <Filter>shaders\sphere</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

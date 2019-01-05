@@ -15,6 +15,6 @@ void main() {
 	vec4 viewPos = mView * vec4(vertexPos, 1.0);
     gl_Position = projection * viewPos;
 	pos = viewPos.xyz;
-	gl_PointSize = pointScale * (pointRadius / gl_Position.w);
+	gl_PointSize = pointScale*0.5f * (pointRadius / gl_Position.w);
 	pColor=vertexColor;
 }

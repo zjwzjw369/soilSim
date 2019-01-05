@@ -2,11 +2,16 @@
 #define PARAMETERS_H
 
 #include "Common.h"
-
+struct rigid {
+	//sphere struct
+	float3 center;
+	float r;
+	float3 vBall;
+	float3 force;
+};
 struct solverParams {
 	float deltaT;
 	float radius;
-
 	float compression;
 	float stretch;
 	float hardening;
@@ -15,7 +20,7 @@ struct solverParams {
 	float alpha;
 	float density;
 
-
+	rigid* rig;
 	//lame parameters
 	float lambda;
 	float mu;

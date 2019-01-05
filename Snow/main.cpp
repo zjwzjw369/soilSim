@@ -66,8 +66,8 @@ int main() {
 	vector<Particle> particles;
 
 	//GroundSmash scene("GroundSmash");
-	//SnowballDrop scene("SnowballDrop");
-	Landslide scene(".\\model\\terrain\\t3\\terrainBeforeH16.png", ".\\model\\terrain\\t3\\terrainAfterH16.png");
+	SnowballDrop scene("SnowballDrop");
+	//Landslide scene(".\\model\\terrain\\t5\\terrainBeforeH16.png", ".\\model\\terrain\\t5\\terrainAfterH16.png");
 	//CustomSceneLoad scene(".\\model\\ZJU.txt");
 	//WallSmash scene("Wallsmash");
 	solverParams sp;
@@ -82,16 +82,18 @@ int main() {
 	ParticleSystem system = ParticleSystem(particles, sp);
 
 	//init terrain
-	//renderer.initTerrain(".\\model\\terrain\\t1\\t1.bmp", ".\\model\\terrain\\t1\\t1Tex.bmp");
 	//地形纹理必须是2的n次方
-	//renderer.initTerrain(".\\model\\terrain\\t2\\terrainAfterH8.bmp", ".\\model\\terrain\\t2\\terrainTexAfter.bmp");
-	renderer.initTerrain16(".\\model\\terrain\\t3\\terrainAfterH16.png", ".\\model\\terrain\\t3\\terrainTexAfter.bmp");
-	renderer.initTerrainBuffers();
-	//setTerrainTex(".\\model\\terrain\\t3\\terrainAfterH8.bmp", ".\\model\\terrain\\t3\\terrainNormAfter.bmp");
-	setTerrainTex16(".\\model\\terrain\\t3\\terrainAfterH16.png", ".\\model\\terrain\\t3\\terrainNormAfter.bmp");
+
+	//renderer.initTerrain16(".\\model\\terrain\\t5\\terrainAfterH16.png", ".\\model\\terrain\\t5\\texture.bmp");
+	//renderer.initTerrainBuffers();
+	//setTerrainTex16(".\\model\\terrain\\t5\\terrainAfterH16.png", ".\\model\\terrain\\t5\\terrainNormAfter.bmp");
+
 	//Initialize buffers for drawing snow
 	renderer.initSnowBuffers(sp.numParticles);
-	//Take 1 step for initialization
+
+	renderer.initSphereBuffers();//初始化刚体球buffer
+
+								 //Take 1 step for initialization
 	system.updateWrapper(sp);
 
 	//Tell ffmpeg to expect raw rgba 720p-60hz frames
@@ -135,7 +137,7 @@ int main() {
 	std::ofstream openfile("..\\VDBDatas\\vdbpoint.txt", std::ios::trunc);
 	int countFrame = 0;
 	int countT = 0;
-	
+
 
 	while (!glfwWindowShouldClose(window)) {
 		//Set frame times
@@ -163,13 +165,21 @@ int main() {
 
 				cout << "output";
 
+				std::ofstream openfileParticleTag("..\\VDBDatas\\" + std::to_string(countT + 1) + ".txt", std::ios::trunc);
+				openfileParticleTag << particleTag.size() << endl;
+				int PTagIndex = 0;
 				for (int i = 0; i < particles.size(); ++i)
 				{
-					openfile << particles[i].pos.x * 5000 - XX * 5000 << " " << particles[i].pos.y  * 5000 - YY * 5000 << " " << particles[i].pos.z * 5000 - ZZ * 5000 << endl;
+					openfile << particles[i].pos.x * 5000 - XX * 5000 << " " << particles[i].pos.y * 5000 - YY * 5000 << " " << particles[i].pos.z * 5000 - ZZ * 5000 << endl;
+					if (PTagIndex<particleTag.size() && i == particleTag[PTagIndex]) {
+						openfileParticleTag << particles[i].pos.x << " " << particles[i].pos.y << " " << particles[i].pos.z << endl;
+						PTagIndex++;
+					}
 				}
 				openfile << 99999.9f << " " << 99999.9f << " " << 99999.9f << endl;
 				countT++;
 				writePartio1("..\\VDBDatas\\" + std::to_string(countT) + ".bgeo", particles);
+				openfileParticleTag.close();
 			}
 
 			if (countT == 500)
@@ -251,7 +261,7 @@ void handleInput(GLFWwindow* window, ParticleSystem &system, Camera &cam) {
 		isOutputVDBStart = false;
 		cout << "stop output openvdb.txt" << endl;
 	}
-		
+
 
 	if (glfwGetKey(window, GLFW_KEY_PERIOD) == GLFW_PRESS)
 		video = false;

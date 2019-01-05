@@ -19,6 +19,7 @@ bool firstTime = true;
 texture<float4, 2, cudaReadModeElementType> TerrainHeightTex;
 texture<float4, 2, cudaReadModeElementType> TerrainNormalTex;
 
+__device__ rigid r;
 __constant__ solverParams sp;
 
 __device__ float NX(const float &x) {
@@ -61,7 +62,7 @@ __device__ int getGridIndex(const int3 &pos) {
 	return (pos.z * sp.gBounds.y * sp.gBounds.x) + (pos.y * sp.gBounds.x) + pos.x;
 }
 
-__device__ void applyBoundaryCollisions( float3& position, float3& velocity) {
+__device__ void applyCellBoundaryCollisions(Cell* cells, int index, float3& position, float3& velocity) {
 	float vn;
 	float3 vt;
 	float3 normal;
@@ -69,7 +70,7 @@ __device__ void applyBoundaryCollisions( float3& position, float3& velocity) {
 	bool collision;
 
 	//handle the 3 boundary dimensions separately
-	for (int i = 0; i < 3; i++) {
+	for (int i = 0; i < 1; i++) {
 		collision = false;
 
 		if (i == 0) {
@@ -109,22 +110,195 @@ __device__ void applyBoundaryCollisions( float3& position, float3& velocity) {
 			}
 		}
 
+		//球体的碰撞
+		float3 centerStar = r.center + sp.deltaT*r.vBall;
+		if (length(position - centerStar) < r.r) {
+			collision = true;
+			normal = normalize(position - centerStar);
+			float3 vRela = r.vBall - velocity;
+			//vRela *= 0.8;
+
+			atomicAdd(&(r.force.x), -vRela.x*cells[index].mass);//f=mv 动量守恒
+			atomicAdd(&(r.force.y), -vRela.y*cells[index].mass);//f=mv 动量守恒
+			atomicAdd(&(r.force.z), -vRela.z*cells[index].mass);//f=mv 动量守恒
+			velocity += vRela;//1200.0是球的密度
+							  //printf("%lf\n",velocity);
+		}
+
+		//结束球的碰撞
+
 		//地形碰撞
+		//float3 tmpPos = position - sp.deltaT*velocity/2.0f;
+		/*
 		float terrainHeight = tex2D(TerrainHeightTex, position.x / sp.terrainScale.x, position.z / sp.terrainScale.z).x;
 		if (position.y<terrainHeight*sp.terrainScale.y) {
-			collision = true;
-			float4 tmp= tex2D(TerrainNormalTex, position.x / sp.terrainScale.x, position.z / sp.terrainScale.z);
-			normal = make_float3(tmp.x*2.0f - 1.0f, tmp.z*2.0f - 1.0f, tmp.y*2.0f - 1.0f);
-			position.y= terrainHeight*sp.terrainScale.y;
-			//normal = make_float3(0.0f);
-			//normal.y = 1.0f;
-		}
-		//if(terrainHeight>0.5)
-		//printf("%lf\n", terrainHeight);
+		collision = true;
 
-		
+
+		float strength = 8.0f;
+		float tl = abs(tex2D(TerrainHeightTex, position.x-0.002f / sp.terrainScale.x, position.z - 0.002f / sp.terrainScale.z).x);
+		float l = abs(tex2D(TerrainHeightTex, position.x - 0.002f / sp.terrainScale.x, position.z/ sp.terrainScale.z).x);
+		float bl = abs(tex2D(TerrainHeightTex, position.x - 0.002f / sp.terrainScale.x, position.z - 0.002f / sp.terrainScale.z).x);
+		float b = abs(tex2D(TerrainHeightTex, position.x / sp.terrainScale.x, position.z + 0.002f / sp.terrainScale.z).x);
+		float br = abs(tex2D(TerrainHeightTex, position.x + 0.002f / sp.terrainScale.x, position.z + 0.002f / sp.terrainScale.z).x);
+		float r = abs(tex2D(TerrainHeightTex, position.x + 0.002f / sp.terrainScale.x, position.z / sp.terrainScale.z).x);
+		float tr = abs(tex2D(TerrainHeightTex, position.x + 0.002f / sp.terrainScale.x, position.z - 0.002f / sp.terrainScale.z).x);
+		float t = abs(tex2D(TerrainHeightTex, position.x  / sp.terrainScale.x, position.z - 0.002f / sp.terrainScale.z).x);
+		float dX = tr + 2 * r + br - tl - 2 * l - bl;
+		float dY = bl + 2 * b + br - tl - 2 * t - tr;
+		normal =  make_float3 (dX, 1.0f / strength, dY);
+
+
+		}
+		*/
+
+
+
 		if (collision) {
-			//if separating, do nothing
+			/*
+			vn = dot(velocity, normal);
+			vt = velocity - vn*normal;
+
+			if (vn >= 0) {
+			continue;
+			}
+			velocity = vt - vn  *normal;
+			*/
+
+			//if separating, do nothing	
+			vn = dot(velocity, normal);
+
+			if (vn >= 0) {
+				continue;
+			}
+
+			//if get here, need to respond to collision in some way
+			//if sticky, unconditionally set collision to 0
+			if (sp.stickyWalls) {
+				velocity = make_float3(0);
+				return;
+			}
+
+			//get tangential component of velocity
+			vt = velocity - vn*normal;
+
+			//see if sticking impulse required
+			//TODO: could have separate static and sliding friction
+			if (length(vt) <= -sp.frictionCoeff * vn) {
+				velocity = make_float3(0);
+				return;
+			}
+
+			//apply dynamic friction
+			velocity = vt + sp.frictionCoeff * vn * normalize(vt);
+		}
+	}
+}
+__device__ void applyBoundaryCollisions(float3& position, float3& velocity) {
+	float vn;
+	float3 vt;
+	float3 normal;
+
+	bool collision;
+
+	//handle the 3 boundary dimensions separately
+	for (int i = 0; i < 1; i++) {
+		collision = false;
+
+		if (i == 0) {
+			if (position.x <= sp.boxCorner1.x) {
+				collision = true;
+				normal = make_float3(0);
+				normal.x = 1.0f;
+			}
+			else if (position.x >= sp.boxCorner2.x) {
+				collision = true;
+				normal = make_float3(0);
+				normal.x = -1.0f;
+			}
+		}
+		if (i == 1) {
+			if (position.y <= sp.boxCorner1.y) {
+				collision = true;
+				normal = make_float3(0);
+				normal.y = 1.0f;
+			}
+			else if (position.y >= sp.boxCorner2.y) {
+				collision = true;
+				normal = make_float3(0);
+				normal.y = -1.0f;
+			}
+		}
+		if (i == 2) {
+			if (position.z <= sp.boxCorner1.z) {
+				collision = true;
+				normal = make_float3(0);
+				normal.z = 1.0f;
+			}
+			else if (position.z >= sp.boxCorner2.z) {
+				collision = true;
+				normal = make_float3(0);
+				normal.z = -1.0f;
+			}
+		}
+
+		//球体的碰撞
+		/*
+		float3 centerStar = center;
+		if (length(position - centerStar) < r) {
+		//collision = true;
+		normal = normalize(position - centerStar);
+		float restitution = 1.0;
+
+		float3 tmpV= normal*(r - length(position - centerStar))*(1+restitution)*vba;
+		velocity += tmpV;
+		//atomicAdd(&(force), -tmpV.y*0.00002057);//f=mv 动量守恒
+		}
+		*/
+
+
+		//结束球的碰撞
+
+
+		//地形碰撞
+		//float3 tmpPos = position - sp.deltaT*velocity/2.0f;
+		/*
+		float terrainHeight = tex2D(TerrainHeightTex, position.x / sp.terrainScale.x, position.z / sp.terrainScale.z).x;
+		if (position.y<terrainHeight*sp.terrainScale.y) {
+		collision = true;
+
+
+		float strength = 1.0f;
+		float tl = abs(tex2D(TerrainHeightTex, position.x-0.002f / sp.terrainScale.x, position.z - 0.002f / sp.terrainScale.z).x);
+		float l = abs(tex2D(TerrainHeightTex, position.x - 0.002f / sp.terrainScale.x, position.z/ sp.terrainScale.z).x);
+		float bl = abs(tex2D(TerrainHeightTex, position.x - 0.002f / sp.terrainScale.x, position.z - 0.002f / sp.terrainScale.z).x);
+		float b = abs(tex2D(TerrainHeightTex, position.x / sp.terrainScale.x, position.z + 0.002f / sp.terrainScale.z).x);
+		float br = abs(tex2D(TerrainHeightTex, position.x + 0.002f / sp.terrainScale.x, position.z + 0.002f / sp.terrainScale.z).x);
+		float r = abs(tex2D(TerrainHeightTex, position.x + 0.002f / sp.terrainScale.x, position.z / sp.terrainScale.z).x);
+		float tr = abs(tex2D(TerrainHeightTex, position.x + 0.002f / sp.terrainScale.x, position.z - 0.002f / sp.terrainScale.z).x);
+		float t = abs(tex2D(TerrainHeightTex, position.x  / sp.terrainScale.x, position.z - 0.002f / sp.terrainScale.z).x);
+		float dX = tr + 2 * r + br - tl - 2 * l - bl;
+		float dY = bl + 2 * b + br - tl - 2 * t - tr;
+		normal =  make_float3 (dX, 1.0f / strength, dY);
+
+
+		}*/
+		//地形碰撞结束
+
+
+
+		if (collision) {
+			/*
+			vn = dot(velocity, normal);
+			vt = velocity - vn*normal;
+
+			if (vn >= 0) {
+			continue;
+			}
+			velocity = vt - vn  *normal;
+			*/
+
+			//if separating, do nothing	
 			vn = dot(velocity, normal);
 
 			if (vn >= 0) {
@@ -168,6 +342,10 @@ __device__ mat3 calcStress(const mat3& fe, const mat3& fp) {
 	mat3 re;
 	computePD(fe, re);
 	//See MPM tech report
+	//float k = 100.0f;
+	//float y = 7.0f;
+	//return mat3(-k*(1 / pow(je, y) - 1.0));
+	//mu = 0;
 	return (2.0f * mu * mat3::multiplyABt(fe - re, fe)) + mat3(lambda * (je - 1) * je);
 }
 
@@ -218,7 +396,7 @@ __global__ void transferData(Particle* particles, Cell* cells) {
 					float3 diff = (particles[index].pos - (make_float3(n) * sp.radius)) * hInv;//APIC 中的 xp-xi
 					float wip = weight(fabs(diff));
 					mat3 xixp = mat3((make_float3(n) * sp.radius) - particles[index].pos, make_float3(0.0f), make_float3(0.0f));//APIC
-				//	particles[index].D += wip*xixp*mat3::transpose(xixp);//APIC
+																																//	particles[index].D += wip*xixp*mat3::transpose(xixp);//APIC
 				}
 			}
 		}
@@ -239,9 +417,6 @@ __global__ void transferData(Particle* particles, Cell* cells) {
 					//atomicAdd(&(cells[gIndex].velocity.x), new_v.x);//APIC
 					//atomicAdd(&(cells[gIndex].velocity.y), new_v.y);//APIC
 					//atomicAdd(&(cells[gIndex].velocity.z), new_v.z);//APIC
-
-
-
 					//Accumulate force at this cell node (the contribution from the current particle)
 					float3 f = volumeStress * gw;
 
@@ -325,6 +500,9 @@ __global__ void updateVelocities(Cell* cells) {
 		cells[index].force += cells[index].mass * sp.gravity;
 		cells[index].velocity *= invMass;
 		cells[index].velocityStar = cells[index].velocity + sp.deltaT * invMass * cells[index].force;
+
+
+
 	}
 }
 
@@ -340,8 +518,9 @@ __global__ void bodyCollisions(Cell* cells) {
 	//index * radius + .5 * radius?
 
 	float3 pos = make_float3(x, y, z) * sp.radius;
-	applyBoundaryCollisions(pos + sp.deltaT * cells[index].velocityStar, cells[index].velocityStar);
-	
+	applyCellBoundaryCollisions(cells, index, pos + sp.deltaT * cells[index].velocityStar, cells[index].velocityStar);
+	//applyBoundaryCollisions(pos + sp.deltaT * cells[index].velocityStar, cells[index].velocityStar);
+
 }
 
 __global__ void updateDeformationGradient(Particle* particles, Cell* cells) {
@@ -399,7 +578,7 @@ __global__ void updateParticleVelocities(Particle* particles, Cell* cells) {
 					float w = weight(fabs(diff));
 
 					mat3 xixp = mat3((make_float3(n) * sp.radius) - particles[index].pos, make_float3(0.0f), make_float3(0.0f));//APIC
-			//		particles[index].B += w*mat3(cells[gIndex].velocityStar, make_float3(0.0f), make_float3(0.0f))*mat3::transpose(xixp);//APIC
+																																//		particles[index].B += w*mat3(cells[gIndex].velocityStar, make_float3(0.0f), make_float3(0.0f))*mat3::transpose(xixp);//APIC
 
 					velocityPic += cells[gIndex].velocityStar * w;//also used for APIC
 					velocityFlip += (cells[gIndex].velocityStar - cells[gIndex].velocity) * w;
@@ -418,23 +597,20 @@ __global__ void particleBodyCollisions(Particle* particles) {
 	int index = threadIdx.x + (blockIdx.x * blockDim.x);
 	if (index >= sp.numParticles) return;
 	applyBoundaryCollisions(particles[index].pos + sp.deltaT * particles[index].velocity, particles[index].velocity);
-	
+
 }
 
 
 __global__ void updatePositions(Particle* particles) {
 	int index = threadIdx.x + (blockIdx.x * blockDim.x);
 	if (index >= sp.numParticles) return;
-
+	float3 tmpPos = particles[index].pos;
 	particles[index].pos += sp.deltaT * particles[index].velocity;
-	float terrainHeight = tex2D(TerrainHeightTex, particles[index].pos.x / sp.terrainScale.x, particles[index].pos.z / sp.terrainScale.z).x;
-	if (particles[index].pos.y<terrainHeight*sp.terrainScale.y) {
-		particles[index].pos = particles[index].pos- sp.deltaT * particles[index].velocity;
-	}//防止穿透界面
+
 }
 
 
-__device__ mat3 MCC_project(mat3 S, float qc, float *dq,Particle *particle) {
+__device__ mat3 MCC_project(mat3 S, float qc, float *dq, Particle *particle) {
 	mat3 e = mat3(log(S[0]), 0.0f, 0.0f,
 		0.0f, log(S[4]), 0.0f,
 		0.0f, 0.0f, log(S[8]));//自然对数e=lnS,因为S为对角矩阵，可以仅对对角元素进行操作，减少计算量
@@ -452,13 +628,12 @@ __device__ mat3 MCC_project(mat3 S, float qc, float *dq,Particle *particle) {
 
 	float p = trE*(3.0 * sp.lambda + 2.0 * sp.mu) / 3.0f / 2.0f / sp.mu / sqrt(1.5f);
 	float q = sqrt(1.5f)*newE_F * 2.0 * sp.mu / 2.0f / sp.mu;
-	float M = 0.210128f;
+	//float M = 0.210128f;
+	//float M = 0.5f;
+	float M = 0.5f;
 	float dy = q*q + M*M*p*(p + qc / 2.0f / sp.mu / sqrt(1.5f));
-	//printf("%lf\n", ((3 * sp.lambda + 2 * sp.mu) / 2.0f / sp.mu)*0.210128);0.210128f
-	//float M = 1.2f;
-	//float dy = newE_F*newE_F + 2.0f/3.0f / 2.0f / sp.mu*((3.0f * sp.lambda + 2.0f * sp.mu) / 2.0f / sp.mu)*M*M  * trE/3.0f*((3.0f * sp.lambda + 2.0f * sp.mu)*trE/3.0f +qc );//dy=||newE||F+(d*lambda+2*mu)/(2*mu)*tr(E)*a;
-	//if(trE>-0.001f&&trE<0.0f)
-	//printf("%lf  trE\n", trE);
+
+
 	if (dy <= 0.00000000001) {//在屈服面之内
 		(*dq) = 0;
 		particle->color = make_float3(0.3f, 0.8f, 0.3f);
@@ -468,18 +643,18 @@ __device__ mat3 MCC_project(mat3 S, float qc, float *dq,Particle *particle) {
 	mat3 H;
 	if (dy / (newE_F*newE_F)>1.0f) {
 		H = e - newE;
-		particle->color = make_float3(0.0f, 0.0f, 0.0f);
+		//particle->color = make_float3(0.0f, 0.0f, 0.0f);
 	}
 	else {
 		H = e - (1.0f - sqrt(1.0f - dy / (newE_F*newE_F))) * newE;
-		particle->color = make_float3(0.3f, 0.3f, 0.8f);
+		particle->color = make_float3(0.3f, 0.3f, 0.8f);//蓝
 	}
 	(*dq) = dy;
-	if (trE / 3.0<qc / 2.0) {
-			(*dq) = -dy;
+	if (abs(p)<qc / 2.0f / sp.mu / sqrt(1.5f) / 2.0) {
+		(*dq) = -dy;
+		//particle->color = make_float3(0.8f, 0.3f, 0.3f);//红
 	}
-	//if(dy>0.001)
-	//printf("%lf\n", trE*(3 * sp.lambda + 2 * sp.mu) / 3.0);
+
 
 	return mat3(exp(H[0]), 0.0f, 0.0f,
 		0.0f, exp(H[4]), 0.0f,
@@ -492,30 +667,17 @@ __device__ mat3 project(mat3 S, float a, float *dq) {
 		0.0f, 0.0f, log(S[8]));//自然对数e=lnS,因为S为对角矩阵，可以仅对对角元素进行操作，减少计算量
 	float trE = (e[0] + e[4] + e[8]);
 
-	/*
-	float maxE = -0.3f;//cone max
-	if (e[0]<maxE||e[4]<maxE||e[8]<maxE) {
-		//printf("%lf  %lf  %lf\n", e[0], e[4], e[8]);
 
-		return mat3(clamp(S[0], maxE, 1000.0f), 0.0f, 0.0f,
-		0.0f, clamp(S[4], maxE, 1000.0f), 0.0f,
-		0.0f, 0.0f, clamp(S[8], maxE, 1000.0f));//因为H为对角矩阵，可以仅对对角元素进行操作，减少计算量
-	}
-	*/
 	mat3 newE = e - trE / 3.0f * mat3(1.0f);//newE=e-tr(e)/3*I;
 	if ((abs(newE[0])<0.000001f&&abs(newE[4])<0.000001f&&abs(newE[8])<0.000001f) || trE > 0.0f) {//在屈服面之外
 		(*dq) = 0;
 		return mat3(1.0f);
 	}
-	//printf("%lf  %lf  %lf      %lf\n", newE[0], newE[4], newE[8], mat3::innerProduct(newE, newE));
 
 	float newE_F = sqrt(mat3::innerProduct(newE, newE));//newE的F范数
 
-	//float dy = newE_F + (3 * sp.lambda + 2 * sp.mu) / 2.0f / sp.mu*trE*a;//dy=||newE||F+(d*lambda+2*mu)/(2*mu)*tr(E)*a;
-																		 //  printf("%lf\n", newE_F);
-
 	float c = 0.0f;
-	float dy = newE_F + (3 * sp.lambda + 2 * sp.mu) / 2.0f / sp.mu*trE*a- c;//dy=||newE||F+(d*lambda+2*mu)/(2*mu)*tr(E)*a;
+	float dy = newE_F + (3 * sp.lambda + 2 * sp.mu) / 2.0f / sp.mu*trE*a - c;//dy=||newE||F+(d*lambda+2*mu)/(2*mu)*tr(E)*a;
 
 
 	if (dy <= 0) {//在屈服面之内
@@ -523,11 +685,10 @@ __device__ mat3 project(mat3 S, float a, float *dq) {
 		return S;
 	}
 
-
 	mat3 H = e - dy*(newE / newE_F);
 	(*dq) = dy;
 	float maxV = 1000.01f;//cone max
-	return mat3(clamp(exp(H[0]),0.0f, maxV), 0.0f, 0.0f,
+	return mat3(clamp(exp(H[0]), 0.0f, maxV), 0.0f, 0.0f,
 		0.0f, clamp(exp(H[4]), 0.0f, maxV), 0.0f,
 		0.0f, 0.0f, clamp(exp(H[8]), 0.0f, maxV));//因为H为对角矩阵，可以仅对对角元素进行操作，减少计算量
 }
@@ -543,12 +704,7 @@ __global__ void MCC_plasticity_hardening(Particle* particles) {
 	particles[index].fe = U*T*mat3::transpose(V);
 	particles[index].fp = V*mat3::inverse(T)*S*mat3::transpose(V)*particles[index].fp;//后面的fp是new fp，这里可能存在问题
 	particles[index].q = particles[index].q + dq;
-	
-	
-	particles[index].qc = particles[index].qc*exp(dq/0.1f);
-	//float fi_F = 20.0f;
-	//float fi_F = sp.h0 + (sp.h1*particles[index].q - sp.h3)*exp(-sp.h2*particles[index].q);
-	//particles[index].a = 0.81649658f*(2 * sinf(fi_F / 180.0f*3.1415926f)) / (3 - sinf(fi_F / 180.0f*3.1415926f));//particles[index].a=sqrt(2/3)*(2 * sinf(fi_F)) / (3 - sinf(fi_F));//前面的一串数字是根号2/3
+	//particles[index].qc = particles[index].qc*exp(dq/0.1f);
 }
 __global__ void plasticity_hardening(Particle* particles) {
 	int index = threadIdx.x + (blockIdx.x * blockDim.x);
@@ -561,8 +717,8 @@ __global__ void plasticity_hardening(Particle* particles) {
 	particles[index].fe = U*T*mat3::transpose(V);
 	particles[index].fp = V*mat3::inverse(T)*S*mat3::transpose(V)*particles[index].fp;//后面的fp是new fp，这里可能存在问题
 	particles[index].q = particles[index].q + dq;
-	//float fi_F = 20.0f;
-	float fi_F = sp.h0 + (sp.h1*particles[index].q - sp.h3)*exp(-sp.h2*particles[index].q);
+	float fi_F = 40.0f;
+	//float fi_F = sp.h0 + (sp.h1*particles[index].q - sp.h3)*exp(-sp.h2*particles[index].q);
 	particles[index].a = 0.81649658f*(2 * sinf(fi_F / 180.0f*3.1415926f)) / (3 - sinf(fi_F / 180.0f*3.1415926f));//particles[index].a=sqrt(2/3)*(2 * sinf(fi_F)) / (3 - sinf(fi_F));//前面的一串数字是根号2/3
 }
 
@@ -581,38 +737,24 @@ __global__ void getPos(float* positionsPtr, Particle* particles) {
 void update(Particle* particles, Cell* cells, int gridSize) {
 	//Clear cell data
 	cudaCheck(cudaMemset(cells, 0, gridSize * sizeof(Cell)));
-	
-	//Rasterize particle data to grid (1)
-	if (!firstTime) transferData << <particleDims, blockSize >> >(particles, cells);
 
-	//First timestep only: compute particle volumes (2)
+	if (!firstTime) transferData << <particleDims, blockSize >> >(particles, cells);
 	if (firstTime) {
 		initialTransfer << <particleDims, blockSize >> >(particles, cells);
 		computeVolumes << <particleDims, blockSize >> >(particles, cells);
 		firstTime = false;
 	}
-
-	//Update grid velocities (4)
 	updateVelocities << <gridDims, blockSize >> >(cells);
-
-	//Grid collisions (5)
 	bodyCollisions << <gridDims, blockSize >> >(cells);
-
-	//Update deformation gradient (7)
 	updateDeformationGradient << <particleDims, blockSize >> >(particles, cells);
-
-	//Update particle velocities (8)
 	updateParticleVelocities << <particleDims, blockSize >> >(particles, cells);
-
-	//Particle collisions (9)
 	particleBodyCollisions << <particleDims, blockSize >> >(particles);
-
-	//Update particle positions (10)
 	updatePositions << <particleDims, blockSize >> >(particles);
 	MCC_plasticity_hardening << <particleDims, blockSize >> >(particles);
+	//plasticity_hardening << <particleDims, blockSize >> >(particles);
 }
 
-__host__ void setTerrainTex(string terrainHeightPath,string terrainNormalpath) {
+__host__ void setTerrainTex(string terrainHeightPath, string terrainNormalpath) {
 	int width, height, nrChannels;
 	unsigned char *texData = stbi_load(terrainHeightPath.data(), &width, &height, &nrChannels, 0);
 	if (!texData) {
@@ -620,11 +762,11 @@ __host__ void setTerrainTex(string terrainHeightPath,string terrainNormalpath) {
 		return;
 	}
 	unsigned char *dst = (unsigned char *)malloc(width *height * 4);
-	for (int i = 0; i < height;++i) {
-		for (int j = 0; j < width;++j) {
+	for (int i = 0; i < height; ++i) {
+		for (int j = 0; j < width; ++j) {
 			dst[(i*width + j) * 4] = texData[(i*width + j) * 3];
-			dst[(i*width + j) * 4+1] = texData[(i*width + j) * 3+1];
-			dst[(i*width + j) * 4+2] = texData[(i*width + j) * 3+2];
+			dst[(i*width + j) * 4 + 1] = texData[(i*width + j) * 3 + 1];
+			dst[(i*width + j) * 4 + 2] = texData[(i*width + j) * 3 + 2];
 		}
 	}
 	unsigned int size = width * height * 4 * sizeof(unsigned char);
@@ -642,14 +784,14 @@ __host__ void setTerrainTex(string terrainHeightPath,string terrainNormalpath) {
 		dst,
 		size,
 		cudaMemcpyHostToDevice));
-	
+
 	TerrainHeightTex.addressMode[0] = cudaAddressModeWrap;
 	TerrainHeightTex.addressMode[1] = cudaAddressModeWrap;
 	//TerrainHeightTex.filterMode = cudaFilterModeLinear;
 	TerrainHeightTex.normalized = true;    // access with normalized texture coordinates
 	cudaCheck(cudaBindTextureToArray(TerrainHeightTex, cuArray, channelDesc));
 	unsigned char *tex2Data = stbi_load(terrainNormalpath.data(), &width, &height, &nrChannels, 0);
-	if(!tex2Data) {
+	if (!tex2Data) {
 		cout << "open Terrain Normal Texture file fail" << endl;
 		return;
 	}
@@ -678,7 +820,7 @@ __host__ void setTerrainTex(string terrainHeightPath,string terrainNormalpath) {
 	//TerrainNormalTex.filterMode = cudaFilterModeLinear;
 	TerrainNormalTex.normalized = true;    // access with normalized texture coordinates
 	cudaCheck(cudaBindTextureToArray(TerrainNormalTex, cuArray2, channelDesc));
-	
+
 	stbi_image_free(texData);
 	stbi_image_free(tex2Data);
 }
@@ -690,13 +832,13 @@ __host__ void setTerrainTex16(string terrainHeightPath16, string terrainNormalpa
 		cout << "open Terrain Height Texture file fail" << endl;
 		return;
 	}
-	float *dst = (float *)malloc(width *height * 4*sizeof(float));
+	float *dst = (float *)malloc(width *height * 4 * sizeof(float));
 	//cout << "nrChannels " << nrChannels << endl;
 	for (int i = 0; i < height; ++i) {
 		for (int j = 0; j < width; ++j) {
-			dst[(i*width + j) * 4] = texData[(i*width + j) ]/65535.0;
-			dst[(i*width + j) * 4 + 1] = texData[(i*width + j) ] / 65535.0;
-			dst[(i*width + j) * 4 + 2] = texData[(i*width + j) ] / 65535.0;
+			dst[(i*width + j) * 4] = texData[(i*width + j)] / 65535.0;
+			dst[(i*width + j) * 4 + 1] = texData[(i*width + j)] / 65535.0;
+			dst[(i*width + j) * 4 + 2] = texData[(i*width + j)] / 65535.0;
 		}
 	}
 	unsigned int size = width * height * 4 * sizeof(float);
@@ -727,12 +869,12 @@ __host__ void setTerrainTex16(string terrainHeightPath16, string terrainNormalpa
 		return;
 	}
 	size = width * height * 4 * sizeof(float);
-	float *dst2 = (float *)malloc(width *height * 4 *sizeof(float));
+	float *dst2 = (float *)malloc(width *height * 4 * sizeof(float));
 	for (int i = 0; i < height; ++i) {
 		for (int j = 0; j < width; ++j) {
-			dst2[(i*width + j) * 4] = tex2Data[(i*width + j) * 3]/255.0f;
-			dst2[(i*width + j) * 4 + 1] = tex2Data[(i*width + j) * 3 + 1]/255.0f;
-			dst2[(i*width + j) * 4 + 2] = tex2Data[(i*width + j) * 3 + 2]/255.0f;
+			dst2[(i*width + j) * 4] = tex2Data[(i*width + j) * 3] / 255.0f;
+			dst2[(i*width + j) * 4 + 1] = tex2Data[(i*width + j) * 3 + 1] / 255.0f;
+			dst2[(i*width + j) * 4 + 2] = tex2Data[(i*width + j) * 3 + 2] / 255.0f;
 		}
 	}
 	cudaArray *cuArray2;
@@ -748,8 +890,8 @@ __host__ void setTerrainTex16(string terrainHeightPath16, string terrainNormalpa
 		cudaMemcpyHostToDevice));
 	TerrainNormalTex.addressMode[0] = cudaAddressModeWrap;
 	TerrainNormalTex.addressMode[1] = cudaAddressModeWrap;
-	TerrainNormalTex.filterMode = cudaFilterModeLinear;
-	TerrainNormalTex.normalized = true;    // access with normalized texture coordinates
+	//TerrainNormalTex.filterMode = cudaFilterModeLinear;
+	TerrainNormalTex.normalized = false;    // access with normalized texture coordinates
 	cudaCheck(cudaBindTextureToArray(TerrainNormalTex, cuArray2, channelDesc));
 
 	stbi_image_free(texData);
@@ -761,7 +903,24 @@ __host__ void setParams(solverParams *params) {
 	particleDims = int(ceil(params->numParticles / blockSize + 0.5f));
 	gridDims = int(ceil(params->gridSize / blockSize + 0.5f));
 	cudaCheck(cudaMemcpyToSymbol(sp, params, sizeof(solverParams)));
+
+	if (!firstTime)
+		cudaCheck(cudaMemcpyFromSymbol(params->rig, r, sizeof(rigid)));
+
+
+	glEnable(GL_DEPTH_TEST);
+
+	float mBall = 2000.0f;
+	params->rig->vBall = make_float3(0.0f, -9.8 * params->deltaT, 0.0f) + params->rig->force / (mBall * 4 * 3.1415926* params->rig->r *params->rig->r*params->rig->r / 3) + params->rig->vBall;
+	params->rig->center += params->rig->vBall *params->deltaT;
+	printf("%lf %lf %lf %lf\n", params->rig->vBall.y, params->rig->center.x, params->rig->center.y, params->rig->center.z);
+	//printf("%lf %lf %lf %lf\n", params->rig->force.y, params->rig->center.x, params->rig->center.y, params->rig->center.z);
+	params->rig->force = make_float3(0.0f);
+	//vBallHost = make_float3(0.0f);
+	cudaCheck(cudaMemcpyToSymbol(r, params->rig, sizeof(rigid)));
+
 }
+
 
 __host__ void getPositions(float* positionsPtr, Particle* particles) {
 	getPos << <particleDims, blockSize >> >(positionsPtr, particles);
