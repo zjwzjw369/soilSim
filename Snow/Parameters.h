@@ -6,8 +6,11 @@ struct rigid {
 	//sphere struct
 	float3 center;
 	float r;
-	float3 vBall;
+	float3 vBall;//球的线速度
+	float3 wBall;//球的角速度
 	float3 force;
+	float3 torque;//转矩
+	
 };
 struct solverParams {
 	float deltaT;

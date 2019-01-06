@@ -19,7 +19,9 @@ static const int blockSize = 128;
 rp3d::Vector3 gravity(0.0, -9.8, 0.0);
 rp3d::DynamicsWorld *world;
 rp3d::ProxyShape* proxyShape;
-rp3d::RigidBody * body;rp3d::RigidBody * boundingBox;
+rp3d::RigidBody * body;
+rp3d::RigidBody * boundingBox;
+
 
 bool firstTime = true;
 texture<float4, 2, cudaReadModeElementType> TerrainHeightTex;
@@ -67,6 +69,7 @@ __device__ float3 gradWeight(const float3 &xpgpDiff) {
 __device__ int getGridIndex(const int3 &pos) {
 	return (pos.z * sp.gBounds.y * sp.gBounds.x) + (pos.y * sp.gBounds.x) + pos.x;
 }
+
 
 __device__ void applyCellBoundaryCollisions(Cell* cells, int index, float3& position, float3& velocity) {
 	float vn;
@@ -121,12 +124,18 @@ __device__ void applyCellBoundaryCollisions(Cell* cells, int index, float3& posi
 		if (length(position - centerStar) < r.r) {
 			collision = true;
 			normal = normalize(position - centerStar);
-			float3 vRela = r.vBall - velocity;
+			float3 V = r.vBall + cross(r.wBall, position - centerStar);
+			float3 vRela = V - velocity;
 			//vRela *= 0.8;
-
-			atomicAdd(&(r.force.x), -vRela.x*cells[index].mass);//f=mv 动量守恒
-			atomicAdd(&(r.force.y), -vRela.y*cells[index].mass);//f=mv 动量守恒
-			atomicAdd(&(r.force.z), -vRela.z*cells[index].mass);//f=mv 动量守恒
+			float3 vRelaN = dot(vRela, normal)*normal;
+			float3 vRelaT = vRela - vRelaN;
+			vRelaT= cross(position - centerStar, vRelaT);
+			atomicAdd(&(r.force.x), -vRelaN.x*cells[index].mass);//f=mv 动量守恒
+			atomicAdd(&(r.force.y), -vRelaN.y*cells[index].mass);//f=mv 动量守恒
+			atomicAdd(&(r.force.z), -vRelaN.z*cells[index].mass);//f=mv 动量守恒
+			atomicAdd(&(r.torque.x), -vRelaT.x*cells[index].mass);//动量矩守恒
+			atomicAdd(&(r.torque.y), -vRelaT.y*cells[index].mass);
+			atomicAdd(&(r.torque.z), -vRelaT.z*cells[index].mass);
 			velocity += vRela;//1200.0是球的密度
 							  //printf("%lf\n",velocity);
 		}
@@ -914,7 +923,7 @@ __host__ void setParams(solverParams *params) {
 
 __host__ void updateRigid(solverParams *params) {
 	float densityBall = 2000.0f;
-	if (firstTime) {
+	if (firstTime) {//第一次初始化场景包围盒刚体等
 		rp3d::SphereShape *sphereShape = new rp3d::SphereShape(rp3d::decimal(params->rig->r));
 		world = new rp3d::DynamicsWorld(gravity);
 		rp3d::Transform transform = rp3d::Transform::identity();
@@ -926,7 +935,8 @@ __host__ void updateRigid(solverParams *params) {
 		// Change the bounciness of the body
 		material.setBounciness(rp3d::decimal(0.0));
 		// Change the friction coefficient of the body
-		material.setFrictionCoefficient(rp3d::decimal(0.2));
+		material.setFrictionCoefficient(rp3d::decimal(0.2));
+
 		//包围盒
 		rp3d::BoxShape* bottomFloor = new rp3d::BoxShape(rp3d::Vector3(1.275f, 0.5, 1.275f));
 		rp3d::BoxShape* topFloor = new rp3d::BoxShape(rp3d::Vector3(1.275f, 0.5, 1.275f));
@@ -949,15 +959,19 @@ __host__ void updateRigid(solverParams *params) {
 	//params->rig->vBall = make_float3(0.0f, -9.8 * params->deltaT, 0.0f) + params->rig->force / (densityBall * 4 * 3.1415926* params->rig->r *params->rig->r*params->rig->r / 3) + params->rig->vBall;
 	//params->rig->center += params->rig->vBall *params->deltaT;
 	*/
-	printf("%lf %lf %lf %lf\n", params->rig->force.y, params->rig->center.x, params->rig->center.y, params->rig->center.z);
+	printf("%lf %lf %lf %lf\n", params->rig->vBall.y, params->rig->center.x, params->rig->center.y, params->rig->center.z);
 
-	params->rig->force /= params->deltaT;//这里的force其实是动能，因此除以dt求得力
+	params->rig->force /= params->deltaT;//这里的force其实是动量，因此除以dt求得力
+	params->rig->torque /= params->deltaT;//这里的torque其实是动量，因此除以dt求得力
 	body->applyForceToCenterOfMass(rp3d::Vector3(params->rig->force.x, params->rig->force.y, params->rig->force.z));
+	body->applyTorque(rp3d::Vector3(params->rig->torque.x, params->rig->torque.y, params->rig->torque.z));
 	world->update(params->deltaT);
 	params->rig->center = make_float3(body->getWorldPoint(rp3d::Vector3(0.0, 0.0, 0.)).x, body->getWorldPoint(rp3d::Vector3(0.0, 0.0, 0.)).y, body->getWorldPoint(rp3d::Vector3(0.0, 0.0, 0.)).z);
 	params->rig->vBall = make_float3(body->getLinearVelocity().x, body->getLinearVelocity().y, body->getLinearVelocity().z);
+	params->rig->wBall = make_float3(body->getAngularVelocity().x, body->getAngularVelocity().y, body->getAngularVelocity().z);
 
 	params->rig->force = make_float3(0.0f);
+	params->rig->torque = make_float3(0.0f);
 	cudaCheck(cudaMemcpyToSymbol(r, params->rig, sizeof(rigid)));
 
 }
