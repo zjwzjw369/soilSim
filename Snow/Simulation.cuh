@@ -8,6 +8,7 @@
 void update(Particle* particles, Cell* cells, int gridSize);
 void getPositions(float* positionsPtr, Particle* particles);
 void setParams(solverParams *tempParams);
+void updateRigid(solverParams *tempParams);
 void setTerrainTex(std::string terrainHeightPath, std::string terrainNormalpath);
 void setTerrainTex16(std::string terrainHeightPath16, std::string terrainNormalpath);
 #endif

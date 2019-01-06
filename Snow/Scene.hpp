@@ -25,12 +25,12 @@ public:
 		sp->alpha = 0.95f;
 		sp->density = 2000.0f;
 
+		//³õÊ¼»¯¸ÕÌå
 		sp->rig = new rigid();
-
 		sp->rig->r = 0.2;
 		sp->rig->vBall = make_float3(0.0f);
 		sp->rig->force = make_float3(0.0f);
-		sp->rig->center = make_float3(0.4, 0.56, 0.4);
+		sp->rig->center = make_float3(1.5, 0.56, 1.5);
 
 		sp->lambda = getLambda(sp->poisson, sp->young);
 		sp->mu = getMu(sp->poisson, sp->young);

@@ -15,6 +15,12 @@ using namespace std;
 static dim3 particleDims;
 static dim3 gridDims;
 static const int blockSize = 128;
+
+rp3d::Vector3 gravity(0.0, -9.8, 0.0);
+rp3d::DynamicsWorld *world;
+rp3d::ProxyShape* proxyShape;
+rp3d::RigidBody * body;rp3d::RigidBody * boundingBox;
+
 bool firstTime = true;
 texture<float4, 2, cudaReadModeElementType> TerrainHeightTex;
 texture<float4, 2, cudaReadModeElementType> TerrainNormalTex;
@@ -688,9 +694,9 @@ __device__ mat3 project(mat3 S, float a, float *dq) {
 	mat3 H = e - dy*(newE / newE_F);
 	(*dq) = dy;
 	float maxV = 1000.01f;//cone max
-	return mat3(clamp(exp(H[0]), 0.0f, maxV), 0.0f, 0.0f,
-		0.0f, clamp(exp(H[4]), 0.0f, maxV), 0.0f,
-		0.0f, 0.0f, clamp(exp(H[8]), 0.0f, maxV));//因为H为对角矩阵，可以仅对对角元素进行操作，减少计算量
+	return mat3(::clamp(exp(H[0]), 0.0f, maxV), 0.0f, 0.0f,
+		0.0f, ::clamp(exp(H[4]), 0.0f, maxV), 0.0f,
+		0.0f, 0.0f, ::clamp(exp(H[8]), 0.0f, maxV));//因为H为对角矩阵，可以仅对对角元素进行操作，减少计算量
 }
 
 __global__ void MCC_plasticity_hardening(Particle* particles) {
@@ -903,24 +909,58 @@ __host__ void setParams(solverParams *params) {
 	particleDims = int(ceil(params->numParticles / blockSize + 0.5f));
 	gridDims = int(ceil(params->gridSize / blockSize + 0.5f));
 	cudaCheck(cudaMemcpyToSymbol(sp, params, sizeof(solverParams)));
+	glEnable(GL_DEPTH_TEST);
+}
 
+__host__ void updateRigid(solverParams *params) {
+	float densityBall = 2000.0f;
+	if (firstTime) {
+		rp3d::SphereShape *sphereShape = new rp3d::SphereShape(rp3d::decimal(params->rig->r));
+		world = new rp3d::DynamicsWorld(gravity);
+		rp3d::Transform transform = rp3d::Transform::identity();
+		rp3d::decimal mass = rp3d::decimal(densityBall * 4 * 3.1415926* params->rig->r *params->rig->r*params->rig->r / 3.0 );
+		body = world->createRigidBody(rp3d::Transform(rp3d::Vector3(params->rig->center.x, params->rig->center.y, params->rig->center.z), rp3d::Quaternion::identity()));
+		body->setType(rp3d::BodyType::DYNAMIC);
+		body->addCollisionShape(sphereShape, transform, mass);
+		rp3d::Material & material = body->getMaterial();
+		// Change the bounciness of the body
+		material.setBounciness(rp3d::decimal(0.0));
+		// Change the friction coefficient of the body
+		material.setFrictionCoefficient(rp3d::decimal(0.2));
+		//包围盒
+		rp3d::BoxShape* bottomFloor = new rp3d::BoxShape(rp3d::Vector3(1.275f, 0.5, 1.275f));
+		rp3d::BoxShape* topFloor = new rp3d::BoxShape(rp3d::Vector3(1.275f, 0.5, 1.275f));
+		rp3d::BoxShape* leftFloor = new rp3d::BoxShape(rp3d::Vector3(0.5, 1.275f, 1.275f));
+		rp3d::BoxShape* rightFloor = new rp3d::BoxShape(rp3d::Vector3(0.5, 1.275f, 1.275f));
+		rp3d::BoxShape* frontFloor = new rp3d::BoxShape(rp3d::Vector3(1.275f, 1.275f, 0.5f));
+		rp3d::BoxShape* afterFloor = new rp3d::BoxShape(rp3d::Vector3(1.275f, 1.275f, 0.5f));
+		boundingBox = world->createRigidBody(rp3d::Transform::identity());
+		boundingBox->setType(rp3d::BodyType::STATIC);
+		boundingBox->addCollisionShape(bottomFloor, rp3d::Transform(rp3d::Vector3(1.275f, -0.5f, 1.275f), rp3d::Quaternion::identity()), 100000.0f);
+		boundingBox->addCollisionShape(topFloor, rp3d::Transform(rp3d::Vector3(1.275f, 2.55f+0.5f, 1.275f), rp3d::Quaternion::identity()), 100000.0f);
+		boundingBox->addCollisionShape(leftFloor, rp3d::Transform(rp3d::Vector3(-0.5f, 1.275f, 1.275f), rp3d::Quaternion::identity()), 100000.0f);
+		boundingBox->addCollisionShape(rightFloor, rp3d::Transform(rp3d::Vector3(2.55f + 0.5f, -1.275f, 1.275f), rp3d::Quaternion::identity()), 100000.0f);
+		boundingBox->addCollisionShape(frontFloor, rp3d::Transform(rp3d::Vector3(1.275f, 1.275f, -0.5f), rp3d::Quaternion::identity()), 100000.0f);
+		boundingBox->addCollisionShape(afterFloor, rp3d::Transform(rp3d::Vector3(1.275f, 1.275f, 2.55+0.5f), rp3d::Quaternion::identity()), 100000.0f);
+	}
 	if (!firstTime)
 		cudaCheck(cudaMemcpyFromSymbol(params->rig, r, sizeof(rigid)));
+	/*用于测试
+	//params->rig->vBall = make_float3(0.0f, -9.8 * params->deltaT, 0.0f) + params->rig->force / (densityBall * 4 * 3.1415926* params->rig->r *params->rig->r*params->rig->r / 3) + params->rig->vBall;
+	//params->rig->center += params->rig->vBall *params->deltaT;
+	*/
+	printf("%lf %lf %lf %lf\n", params->rig->force.y, params->rig->center.x, params->rig->center.y, params->rig->center.z);
 
+	params->rig->force /= params->deltaT;//这里的force其实是动能，因此除以dt求得力
+	body->applyForceToCenterOfMass(rp3d::Vector3(params->rig->force.x, params->rig->force.y, params->rig->force.z));
+	world->update(params->deltaT);
+	params->rig->center = make_float3(body->getWorldPoint(rp3d::Vector3(0.0, 0.0, 0.)).x, body->getWorldPoint(rp3d::Vector3(0.0, 0.0, 0.)).y, body->getWorldPoint(rp3d::Vector3(0.0, 0.0, 0.)).z);
+	params->rig->vBall = make_float3(body->getLinearVelocity().x, body->getLinearVelocity().y, body->getLinearVelocity().z);
 
-	glEnable(GL_DEPTH_TEST);
-
-	float mBall = 2000.0f;
-	params->rig->vBall = make_float3(0.0f, -9.8 * params->deltaT, 0.0f) + params->rig->force / (mBall * 4 * 3.1415926* params->rig->r *params->rig->r*params->rig->r / 3) + params->rig->vBall;
-	params->rig->center += params->rig->vBall *params->deltaT;
-	printf("%lf %lf %lf %lf\n", params->rig->vBall.y, params->rig->center.x, params->rig->center.y, params->rig->center.z);
-	//printf("%lf %lf %lf %lf\n", params->rig->force.y, params->rig->center.x, params->rig->center.y, params->rig->center.z);
 	params->rig->force = make_float3(0.0f);
-	//vBallHost = make_float3(0.0f);
 	cudaCheck(cudaMemcpyToSymbol(r, params->rig, sizeof(rigid)));
 
 }
-
 
 __host__ void getPositions(float* positionsPtr, Particle* particles) {
 	getPos << <particleDims, blockSize >> >(positionsPtr, particles);

@@ -41,6 +41,7 @@ ParticleSystem::~ParticleSystem() {
 
 void ParticleSystem::updateWrapper(solverParams& params) {
 	setParams(&params);
+	updateRigid(&params);
 	update(particles, cells, params.gridSize);
 	cudaDeviceSynchronize();
 	cudaCheck(cudaMemcpy(&mainParticles[0], &particles[0], params.numParticles * sizeof(Particle), cudaMemcpyDeviceToHost));

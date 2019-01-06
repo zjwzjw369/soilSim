@@ -14,6 +14,12 @@
 #include <glm/gtc/constants.hpp>
 #include <vector>
 #include <math.h>
+
+#include <reactphysics3d/reactphysics3d.h>
+
 #include <Windows.h>
+
+
+using namespace reactphysics3d;
 
 #endif
